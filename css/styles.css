@@ -1,11 +1,15 @@
 @charset "utf-8";
 /* CSS Document */
 
+:root {
+	--main-font: Helvetica, Arial, sans-serif;
+}
+
 body,
 td,
 th,
 p {
-	font-family: Helvetica, Arial, sans-serif;
+	font-family: var(--main-font);
 	font-size: 16px;
 	color: #333;
 	line-height: 1.5;
@@ -17,7 +21,7 @@ body {
 }
 ul,
 li {
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: var(--main-font);
 	font-size: 10pt;
 	color: #333;
 }
@@ -39,7 +43,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--main-font);
   margin: 0 0 20px;
 }
 article,
@@ -57,8 +61,12 @@ section {
 	display: block;
 }
 #maincontent {
-  background-color: #f3f3f3;
   min-height: 100%;
+}
+.maincontent{
+	display: flex;
+	flex-direction: column;
+	background-color: #f3f3f3;
 }
 #footer {
   background-color: #444;
@@ -78,6 +86,7 @@ nav {
 }
 nav h1 {
   margin: auto;
+	font-size: 2em;
 }
 nav h1 a {
   color: #fff;
@@ -127,9 +136,10 @@ nav h1 a {
 /* ====================== Restaurant Filtering ====================== */
 .filter-options {
   width: 100%;
-  height: 50px;
+  /* height: 50px; */
   background-color: #3397DB;
   align-items: center;
+	padding: 20px 10px;
 }
 .filter-options h2 {
   color: white;
@@ -157,11 +167,13 @@ nav h1 a {
   margin: 0;
   padding: 30px 15px 60px;
   text-align: center;
+	display: flex;
+	flex-flow: row wrap;
 }
 #restaurants-list li {
   background-color: #fff;
   border: 2px solid #ccc;
-  font-family: Arial,sans-serif;
+  font-family: var(--main-font);
   margin: 15px;
   min-height: 380px;
   padding: 0 30px 25px;
@@ -173,12 +185,13 @@ nav h1 a {
   display: block;
   margin: 0;
   max-width: 100%;
-  min-height: 248px;
+  /* min-height: 248px; */
   min-width: 100%;
+	margin-top: 30px;
 }
 #restaurants-list li h1 {
   color: #f18200;
-  font-family: Arial,sans-serif;
+  font-family: var(--main-font);
   font-size: 14pt;
   font-weight: 200;
   letter-spacing: 0;
@@ -230,7 +243,7 @@ nav h1 a {
 }
 #restaurant-name {
   color: #f18200;
-  font-family: Arial,sans-serif;
+  font-family: var(--main-font);
   font-size: 20pt;
   font-weight: 200;
   letter-spacing: 0;
