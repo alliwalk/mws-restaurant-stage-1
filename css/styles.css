@@ -18,7 +18,6 @@ body {
 	background-color: #fdfdfd;
 	margin: 0 auto;
 	position:relative;
-	/* width: 1024px; */
 }
 ul,
 li {
@@ -84,7 +83,7 @@ nav {
   /* height: 80px; */
   background-color: #252831;
   /* text-align:center; */
-	padding-left: 1em;
+	/* padding-left: 1em; */
 }
 nav h1 {
   margin: auto;
@@ -92,7 +91,7 @@ nav h1 {
 }
 nav h1 a {
   color: #fff;
-  font-size: 1.5em;
+  font-size: 1.250em;
   font-weight: 200;
   letter-spacing: 10px;
   text-transform: uppercase;
@@ -326,11 +325,14 @@ nav h1 a {
 	.restaurants-list {
 		width: 100%;
 	}
+	nav h1 a{
+		font-size: 1.250em;
+	}
 }
 
 @media screen and (min-width: 768px){
 	nav h1 {
-		padding: 10px;
+		padding: 20px;
 	}
 	#restaurants-list li{
 		width: auto;
