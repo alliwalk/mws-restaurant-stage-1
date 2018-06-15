@@ -180,8 +180,7 @@ nav h1 a {
   margin: 12px;
   min-height: 380px;
   padding: 0 15px 25px;
-  text-align: left;
-  width: 270px;
+  text-align: center;
 }
 #restaurants-list .restaurant-img {
   background-color: #ccc;
@@ -341,4 +340,5 @@ nav h1 a {
 @media screen and (min-width: 769px){
 	#restaurants-list li{
 		width: 270px;
+		text-align: left;
 	}
