@@ -170,7 +170,7 @@ nav h1 a {
   text-align: center;
 	display: flex;
 	flex-flow: row wrap;
-	justify-content: center;
+	justify-content: flex-start;
 	align-content: space-between;
 }
 #restaurants-list li {
