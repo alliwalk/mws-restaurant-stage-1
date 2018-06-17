@@ -142,8 +142,18 @@ nav h1 a {
   font-size: 1.125rem;
   font-weight: 600;
   line-height: 1;
-  margin: 0 1em 5px;
+	margin: 0 1em 15px;
 }
+.filter-options span{
+	display: block;
+
+}
+.filter-options label{
+	margin-left: 1em;
+	margin-bottom: 0;
+	color: #fff;
+}
+
 .filter-options select {
   background-color: white;
   border: 1px solid #fff;
@@ -165,7 +175,7 @@ nav h1 a {
   text-align: center;
 	display: flex;
 	flex-flow: row wrap;
-	justify-content: flex-start;
+	justify-content: center;
 	align-content: space-between;
 }
 #restaurants-list li {
@@ -326,6 +336,7 @@ nav h1 a {
 	nav h1 a{
 		font-size: 1.250em;
 	}
+
 }
 
 @media screen and (min-width: 768px){
@@ -341,7 +352,12 @@ nav h1 a {
 		width: 270px;
 		text-align: left;
 	}
-
+		.filter-options h2 {
+			margin: 0 1em 5px;
+		}
+		.filter-options span{
+			display: inline-block;
+		}
 
 }
 @media screen and (min-width: 1100px){
