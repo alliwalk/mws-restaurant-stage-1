@@ -1,3 +1,6 @@
+//I referenced: How to set up a basic service worker - https://www.youtube.com/watch?v=BfL3pprhnms
+// Accessed June 20, 2018
+
 if (navigator.serviceWorker){
   navigator.serviceWorker.register('sw.js', {scope: '/'})
     .then(function(registration){

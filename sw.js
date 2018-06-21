@@ -23,7 +23,7 @@ var filesToCache = [
 ];
 
 
-// How to set up a basic service worker - https://www.youtube.com/watch?v=BfL3pprhnms
+// For Install & Activate, I referenced: How to set up a basic service worker - https://www.youtube.com/watch?v=BfL3pprhnms
 // Accessed June 20, 2018
 
 // Install SW
@@ -58,7 +58,7 @@ self.addEventListener('activate', function(event) {
   )
 });
 
-
+// Alternative option from YouTube example
 // Fetch serviceWorker
 // self.addEventListener('fetch', function(event) {
 //   console.log("[Service Worker] Fetching", event.request.url);
@@ -98,6 +98,7 @@ self.addEventListener('activate', function(event) {
 
 
 // https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerGlobalScope
+// June 20, 2018
 self.addEventListener('fetch', function(event) {
   console.log('Handling fetch event for', event.request.url);
 
@@ -128,11 +129,3 @@ self.addEventListener('fetch', function(event) {
     })
   );
 });
-
-// function fromCache(request) {
-//   return caches.open(staticCacheName).then(function (cache) {
-//     return cache.match(request).then(function (matching) {
-//       return matching || Promise.reject('no-match');
-//     });
-//   });
-// }
