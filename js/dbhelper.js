@@ -11,7 +11,18 @@ class DBHelper {
      const port = 1337; //Change this to your server port
      // stage1:
      // return `http://localhost:${port}/data/restaurants.json`;
-     return `http://localhost:${port}/restaurants/`;
+     // return `http://localhost:${port}/restaurants/`;
+
+     fetch(`http://localhost:${port}/restaurants/`).then(function(response) {
+      if(!response.ok){
+        throw new Error('ERROR: response not ok.')
+        }
+      return response.json();// work with the returned response
+      }).then(function(responseAsJson) {
+        console.log(responseAsJson); //do stuff
+      }).catch(function(error){
+        console.log('Problem with: \n', error);
+     });
 
    }
 
