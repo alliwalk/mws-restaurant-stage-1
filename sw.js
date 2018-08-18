@@ -28,7 +28,7 @@ var filesToCache = [
 
 // Install SW
 self.addEventListener('install', function(event){
-  console.log("[Service Workeer] Installed ");
+  console.log("[Service Worker] Installed ");
   event.waitUntil(
     caches.open(staticCacheName)
     .then(function(cache){
@@ -57,45 +57,6 @@ self.addEventListener('activate', function(event) {
     })
   )
 });
-
-// Alternative option from YouTube example
-// Fetch serviceWorker
-// self.addEventListener('fetch', function(event) {
-//   console.log("[Service Worker] Fetching", event.request.url);
-//
-//   event.respondWith(
-//
-//     caches.match(event.request).then(function (response) {
-//       if (response){
-//         console.log("[Service Worker] Found in cache", event.request.url);
-//         return response;
-//       }
-//
-//       const requestClone = event.request.clone();
-//
-//       fetch(requestClone)
-//         .then(function(response){
-//
-//           if (!response){
-//             console.log("[Service Worker] No response from fetch");
-//             return response;
-//           }
-//           const responseClone = response.clone();
-//           caches.open(staticCacheName).then(function(cache) {
-//
-//             console.log("[Service Worker] New Data New", event.request.url);
-//             cache.put(event.request, responseClone);
-//             return response;
-//           });
-//         })
-//         .catch(function(err){
-//           console.log("[Service Worker] Error fetch and caching", err);
-//         })
-//     })
-//   )
-//
-// });
-
 
 // https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerGlobalScope
 // June 20, 2018
@@ -129,3 +90,19 @@ self.addEventListener('fetch', function(event) {
     })
   );
 });
+
+
+// Create indexDB
+// import idb from 'idb';
+
+// var dbPromise = idb.open('restaurant-db', 1, function(upgradeDB) {
+//   var KeyValStore = upgradeDb.createObjectStore('keyval');
+//   KeyValStore.put('world', 'hello');
+// });
+
+
+
+
+
+
+
