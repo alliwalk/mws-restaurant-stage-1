@@ -7,10 +7,13 @@ class DBHelper {
    * Database URL.
    * Change this to restaurants.json file location on your server.
    */
-  static get DATABASE_URL() {
-    const port = 8887 // Change this to your server port
-    return `http://localhost:${port}/data/restaurants.json`;
-  }
+   static get DATABASE_URL() {
+     const port = 1337; //Change this to your server port
+     // stage1:
+     // return `http://localhost:${port}/data/restaurants.json`;
+     return `http://localhost:${port}/restaurants/`;
+
+   }
 
   /**
    * Fetch all restaurants.
@@ -22,6 +25,7 @@ class DBHelper {
       if (xhr.status === 200) { // Got a success response from server!
         const json = JSON.parse(xhr.responseText);
         const restaurants = json.restaurants;
+        // const restaurants = json.restaurants; [old]
         callback(null, restaurants);
       } else { // Oops!. Got an error from server.
         const error = (`Request failed. Returned status of ${xhr.status}`);
@@ -84,7 +88,7 @@ class DBHelper {
 
   /**
    * Fetch restaurants by a cuisine and a neighborhood with proper error handling.
-   */
+  //  */
   static fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, callback) {
     // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
@@ -152,10 +156,10 @@ class DBHelper {
   static imageUrlForRestaurant(restaurant) {
     return (`/img/${restaurant.photograph}`);
   }
-
-  /**
-   * Map marker for a restaurant.
-   */
+  //
+  // /**
+  //  * Map marker for a restaurant.
+  //  */
    static mapMarkerForRestaurant(restaurant, map) {
     // https://leafletjs.com/reference-1.3.0.html#marker
     const marker = new L.marker([restaurant.latlng.lat, restaurant.latlng.lng],
