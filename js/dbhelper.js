@@ -1,3 +1,62 @@
+// let idb = window.idb;
+//
+// if (typeof idb === "undefined") {
+//   self.importScripts('idb.js');
+// }
+
+// create index
+ // var dbPromise = idb.open('restaurant-db', 1,
+ //   function(upgradeDB) {
+ //     if (!upgradeDb.createObjectStoreNames.contains('foodList')) {
+ //        upgradeDb.createObjectStore('foodList', {keyPath: 'id', autoIncrement: true});
+ //         console.log("ObjectStore: Created");
+ //      }
+ //  });
+
+ (function() {
+   'use strict';
+
+   let idb = window.idb;
+   let open = indexedDB.open('restaurant-db', 1);
+
+   open.onupgradeneeded = function(){
+     let db = open.result;
+     db.createObjectStore('foodList', { autoIncrement: true});
+     console.log("ObjectStore: Created");
+   }
+
+   open.onsuccess = function(){
+     let db = open.result;
+     let tx = db.transaction('foodList', 'readwrite');
+     let store = tx.objectStore('foodList');
+     console.log("ObjectStore: Foodlist added");
+
+     store.put({ r_id:'123', r_name:'chelsea', res_loc: '', res_cuisine: "pizza", res_hours: "today"});
+     console.log("ObjectStore: Values added")
+
+
+     let q1 = store.get(1);
+     let qs = index.get("Robertas");
+
+     q1.onsuccess = function(){
+       console.log(q1.result);
+       console.log(q1.result.res_name);
+     };
+     //
+     qs.onsuccess = function(){
+       console.log(qs.result.res_name);
+     };
+
+
+     tx.oncomplete = function(){
+       db.close();
+     }
+   }
+ })();
+
+
+
+
 /**
  * Common database helper functions.
  */
@@ -13,18 +72,21 @@ class DBHelper {
      // return `http://localhost:${port}/data/restaurants.json`;
      // return `http://localhost:${port}/restaurants/`;
 
-     fetch(`http://localhost:${port}/restaurants/`).then(function(response) {
-      if(!response.ok){
-        throw new Error('ERROR: response not ok.')
-        }
-      return response.json();// work with the returned response
-      }).then(function(responseAsJson) {
-        console.log(responseAsJson); //do stuff
-      }).catch(function(error){
-        console.log('Problem with: \n', error);
-     });
+
+// FETCH
+     // fetch(`http://localhost:${port}/restaurants/`).then(function(response) {
+     //  if(!response.ok){
+     //    throw new Error('ERROR: response not ok.')
+     //    }
+     //  return response.json();// work with the returned response
+     //  }).then(function(responseAsJson) {
+     //    console.log(responseAsJson); //do stuff
+     //  }).catch(function(error){
+     //    console.log('Problem with: \n', error);
+     // });
 
    }
+
 
   /**
    * Fetch all restaurants.
@@ -181,7 +243,7 @@ class DBHelper {
       marker.addTo(newMap);
     return marker;
   }
-  /* static mapMarkerForRestaurant(restaurant, map) {
+ static mapMarkerForRestaurant(restaurant, map) {
     const marker = new google.maps.Marker({
       position: restaurant.latlng,
       title: restaurant.name,
@@ -190,6 +252,5 @@ class DBHelper {
       animation: google.maps.Animation.DROP}
     );
     return marker;
-  } */
-
+  }
 }
