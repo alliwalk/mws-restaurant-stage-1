@@ -1,59 +1,63 @@
-// let idb = window.idb;
-//
-// if (typeof idb === "undefined") {
-//   self.importScripts('idb.js');
-// }
-
-// create index
- // var dbPromise = idb.open('restaurant-db', 1,
- //   function(upgradeDB) {
- //     if (!upgradeDb.createObjectStoreNames.contains('foodList')) {
- //        upgradeDb.createObjectStore('foodList', {keyPath: 'id', autoIncrement: true});
- //         console.log("ObjectStore: Created");
- //      }
- //  });
-
  (function() {
    'use strict';
 
-   let idb = window.idb;
-   let open = indexedDB.open('restaurant-db', 1);
-
-   open.onupgradeneeded = function(){
-     let db = open.result;
-     db.createObjectStore('foodList', { autoIncrement: true});
-     console.log("ObjectStore: Created");
+   //check for support
+   if (!('indexedDB' in window)) {
+     console.log('This browser doesn\'t support IndexedDB');
+     return;
    }
 
-   open.onsuccess = function(){
-     let db = open.result;
-     let tx = db.transaction('foodList', 'readwrite');
-     let store = tx.objectStore('foodList');
-     console.log("ObjectStore: Foodlist added");
-
-     store.put({ r_id:'123', r_name:'chelsea', res_loc: '', res_cuisine: "pizza", res_hours: "today"});
-     console.log("ObjectStore: Values added")
-
-
-     let q1 = store.get(1);
-     let qs = index.get("Robertas");
-
-     q1.onsuccess = function(){
-       console.log(q1.result);
-       console.log(q1.result.res_name);
-     };
-     //
-     qs.onsuccess = function(){
-       console.log(qs.result.res_name);
-     };
+   var dbPromise = idb.open('restaurant-db', 1,
+     function(upgradeDb) {
+       if (!upgradeDb.objectStoreNames.contains('names')) {
+          var nameOS = upgradeDb.createObjectStore('names', {keyPath: 'id', autoIncrement: true});
+          nameOS.createIndex('restaurant', 'restaurant', {unique: true});
+          nameOS.createIndex('neighborhood', 'neighborhood', {unique: false});
+        }
+      console.log("ObjectStore: Created names");
+      if (!upgradeDb.objectStoreNames.contains('cuisine')) {
+        var cuisineOS = upgradeDb.createObjectStore('cuisine');
+        cuisineOS.createIndex('cuisine', 'cuisine', {unique: false});
+       }
+      console.log("ObjectStore: Created cuisines");
+      });
+    })();
 
 
-     tx.oncomplete = function(){
-       db.close();
-     }
-   }
- })();
-
+    // let idb = window.idb;
+    // let open = indexedDB.open('restaurant-db', 1);
+    //
+    // open.onupgradeneeded = function(){
+    //   let db = open.result;
+    //   db.createObjectStore('foodList', { autoIncrement: true});
+    //   console.log("ObjectStore: Created");
+    // }
+    //
+    // open.onsuccess = function(){
+    //   let db = open.result;
+    //   let tx = db.transaction('foodList', 'readwrite');
+    //   let store = tx.objectStore('foodList');
+    //   console.log("ObjectStore: Foodlist added");
+    //
+    //   store.put({ r_id:'123', r_name:'chelsea', res_loc: '', res_cuisine: "pizza", res_hours: "today"});
+    //   console.log("ObjectStore: Values added")
+    //
+    //
+    //   let q1 = store.get(1);
+    //   let qs = index.get("Robertas");
+    //
+    //   q1.onsuccess = function(){
+    //     console.log(q1.result);
+    //     console.log(q1.result.res_name);
+    //   };
+    //   //
+    //   qs.onsuccess = function(){
+    //     console.log(qs.result.res_name);
+    //   };
+    //   tx.oncomplete = function(){
+    //     db.close();
+    //   }
+    // }
 
 
 
