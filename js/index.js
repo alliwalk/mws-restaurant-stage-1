@@ -1,3 +1,30 @@
+(function() {
+  'use strict';
+
+  //check for support
+  if (!('indexedDB' in window)) {
+    console.log('This browser doesn\'t support IndexedDB');
+    return;
+  }
+
+  var dbPromise = idb.open('restaurant', 1,
+    function(upgradeDb) {
+      if (!upgradeDb.objectStoreNames.contains('restaurants')) {
+         var store = upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
+         store.createIndex('name', 'name', {unique: true});
+         store.createIndex('cuisine', 'cuisine_type', {unique: false});
+       }
+     console.log("ObjectStore: Created restaurants");
+     });
+ })();
+
+
+
+
+
+
+
+
 // if (!window.indexedDB){
 //   alert();
 // }
