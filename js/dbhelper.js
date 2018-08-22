@@ -1,65 +1,3 @@
- (function() {
-   'use strict';
-
-   //check for support
-   if (!('indexedDB' in window)) {
-     console.log('This browser doesn\'t support IndexedDB');
-     return;
-   }
-
-   var dbPromise = idb.open('restaurant-db', 1,
-     function(upgradeDb) {
-       if (!upgradeDb.objectStoreNames.contains('names')) {
-          var nameOS = upgradeDb.createObjectStore('names', {keyPath: 'id', autoIncrement: true});
-          nameOS.createIndex('restaurant', 'restaurant', {unique: true});
-          nameOS.createIndex('neighborhood', 'neighborhood', {unique: false});
-        }
-      console.log("ObjectStore: Created names");
-      if (!upgradeDb.objectStoreNames.contains('cuisine')) {
-        var cuisineOS = upgradeDb.createObjectStore('cuisine');
-        cuisineOS.createIndex('cuisine', 'cuisine', {unique: false});
-       }
-      console.log("ObjectStore: Created cuisines");
-      });
-    })();
-
-
-    // let idb = window.idb;
-    // let open = indexedDB.open('restaurant-db', 1);
-    //
-    // open.onupgradeneeded = function(){
-    //   let db = open.result;
-    //   db.createObjectStore('foodList', { autoIncrement: true});
-    //   console.log("ObjectStore: Created");
-    // }
-    //
-    // open.onsuccess = function(){
-    //   let db = open.result;
-    //   let tx = db.transaction('foodList', 'readwrite');
-    //   let store = tx.objectStore('foodList');
-    //   console.log("ObjectStore: Foodlist added");
-    //
-    //   store.put({ r_id:'123', r_name:'chelsea', res_loc: '', res_cuisine: "pizza", res_hours: "today"});
-    //   console.log("ObjectStore: Values added")
-    //
-    //
-    //   let q1 = store.get(1);
-    //   let qs = index.get("Robertas");
-    //
-    //   q1.onsuccess = function(){
-    //     console.log(q1.result);
-    //     console.log(q1.result.res_name);
-    //   };
-    //   //
-    //   qs.onsuccess = function(){
-    //     console.log(qs.result.res_name);
-    //   };
-    //   tx.oncomplete = function(){
-    //     db.close();
-    //   }
-    // }
-
-
 
 /**
  * Common database helper functions.
@@ -78,16 +16,16 @@ class DBHelper {
 
 
 // FETCH
-     // fetch(`http://localhost:${port}/restaurants/`).then(function(response) {
-     //  if(!response.ok){
-     //    throw new Error('ERROR: response not ok.')
-     //    }
-     //  return response.json();// work with the returned response
-     //  }).then(function(responseAsJson) {
-     //    console.log(responseAsJson); //do stuff
-     //  }).catch(function(error){
-     //    console.log('Problem with: \n', error);
-     // });
+     fetch(`http://localhost:${port}/restaurants/`).then(function(response) {
+      if(!response.ok){
+        throw new Error('ERROR: response not ok.')
+        }
+      return response.json();// work with the returned response
+      }).then(function(responseAsJson) {
+        console.log(responseAsJson); //do stuff
+      }).catch(function(error){
+        console.log('Problem with: \n', error);
+     });
 
    }
 
