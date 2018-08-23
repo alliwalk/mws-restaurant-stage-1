@@ -7,7 +7,7 @@
     return;
   }
 
-  var dbPromise = idb.open('restaurant', 1,
+  var dbPromise = idb.open('restaurant-idb', 1,
     function(upgradeDb) {
       if (!upgradeDb.objectStoreNames.contains('restaurants')) {
          var store = upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
@@ -18,8 +18,46 @@
      });
  })();
 
+ // var index = db.transaction('restaurants')
+ // .objectStore('restaurant').index('name');
+ //
+ // return index.getAll().then(function(messages){
+ //   in
+ // })
+//
+
+// return idb.open('restaurant-idb', 1,
+//    function(upgradeDb) {
+//      if (!upgradeDb.objectStoreNames.contains('restaurants')) {
+//         var store = upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
+//
 
 
+// var messages = JSON.parse(data);
+// this.dbPromise.then(function(db){
+//   if(!db) return;
+//
+//   var store =
+//
+// });
+
+
+
+
+//store
+ // dbPromise.then(function(db) {
+ //   var tx = db.transaction('restaurants', 'readwrite');
+ //   var store = tx.objectStore('restaurants');
+ //   var item = {
+ //     address: {$address},
+ //     id: {$id},
+ //     name: {$name}
+ //   };
+ //   store.add(item);
+ //   return tx.complete;
+ // }).then(function() {
+ //   console.log('added item to restaurants os!');
+ // });
 
 
 
