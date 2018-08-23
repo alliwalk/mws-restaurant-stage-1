@@ -22,7 +22,7 @@ class DBHelper {
         }
       return response.json();// work with the returned response
       }).then(function(responseAsJson) {
-        console.log(responseAsJson); //do stuff
+        console.log("JSON is here!");
       }).catch(function(error){
         console.log('Problem with: \n', error);
      });
