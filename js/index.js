@@ -10,13 +10,46 @@
   var dbPromise = idb.open('restaurant-idb', 1,
     function(upgradeDb) {
       if (!upgradeDb.objectStoreNames.contains('restaurants')) {
-         var store = upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
-         store.createIndex('name', 'name', {unique: true});
-         store.createIndex('cuisine', 'cuisine_type', {unique: false});
+         var foodOs = upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
+         // foodOs.createIndex('boro_name', 'neighborhood', {unique: false});
+         // foodOs.createIndex('cuis_name', 'cuisine_type', {unique: false});
        }
-     console.log("ObjectStore: Created restaurants");
-     });
+      console.log("ObjectStore: Created restaurants");
+      });
+
+     // fetch(`http://localhost:${port}/restaurants/`).then(function(response) {
+     // if(!response.ok){
+     //   throw new Error('ERROR: response not ok.')
+     // }
+     //   return response.json();// work with the returned response
+
+      // function(addDb) {
+        dbPromise.then(function(db) {
+        var tx = db.transaction('restaurants', 'readwrite');
+        var store = tx.objectStore('restaurants');
+        console.log("ObjectStore: Restaurant object");
+        store.add({id: '6'});
+        return tx.complete;
+      });
+    // }
+
+    // function (getAllDb)
+      dbPromise.then(function(db) {
+        var tx = db.transaction('restaurants', 'readonly');
+        var store = tx.objectStore('restaurants');
+        store.getAll();
+      });
+      // };
+
+
+
+
+
  })();
+
+
+
+
 
  // var index = db.transaction('restaurants')
  // .objectStore('restaurant').index('name');
@@ -25,13 +58,6 @@
  //   in
  // })
 //
-
-// return idb.open('restaurant-idb', 1,
-//    function(upgradeDb) {
-//      if (!upgradeDb.objectStoreNames.contains('restaurants')) {
-//         var store = upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
-//
-
 
 // var messages = JSON.parse(data);
 // this.dbPromise.then(function(db){
@@ -45,19 +71,7 @@
 
 
 //store
- // dbPromise.then(function(db) {
- //   var tx = db.transaction('restaurants', 'readwrite');
- //   var store = tx.objectStore('restaurants');
- //   var item = {
- //     address: {$address},
- //     id: {$id},
- //     name: {$name}
- //   };
- //   store.add(item);
- //   return tx.complete;
- // }).then(function() {
- //   console.log('added item to restaurants os!');
- // });
+ //
 
 
 
