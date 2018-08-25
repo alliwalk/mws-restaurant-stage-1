@@ -8,26 +8,32 @@ class DBHelper {
    * Database URL.
    * Change this to restaurants.json file location on your server.
    */
+
+
    static get DATABASE_URL() {
      const port = 1337; //Change this to your server port
      // stage1:
      // return `http://localhost:${port}/data/restaurants.json`;
      // return `http://localhost:${port}/restaurants/`;
 
-
 // FETCH
-     fetch(`http://localhost:${port}/restaurants/`).then(function(response) {
-      if(!response.ok){
-        throw new Error('ERROR: response not ok.')
-        }
-      return response.json();// work with the returned response
-      }).then(function(responseAsJson) {
-        console.log("JSON is here!");
-      }).catch(function(error){
-        console.log('Problem with: \n', error);
-     });
 
-   }
+    fetch(`http://localhost:${port}/restaurants/`).then(function(response) {
+    if(!response.ok){
+      throw new Error('ERROR: response not ok.')
+    }
+      return response.json();// work with the returned response
+    }).then(function(responseAsJson) {
+      console.log(responseAsJson); //do stuff
+    }).catch(function(error){
+      console.log('Problem with: \n', error);
+    });
+
+  }
+
+
+
+
 
 
   /**
