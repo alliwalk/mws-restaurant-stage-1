@@ -1,5 +1,5 @@
 (function() {
-  'use strict';
+
 
   //check for support
   if (!('indexedDB' in window)) {
@@ -23,14 +23,15 @@
         var store = tx.objectStore('restaurants');
         console.log("ObjectStore: Restaurant object");
         store.add( {id: '6'});
+        for(var i = 0; i < store.length; i++){
+          store.add(i);
+        )
         return tx.complete;
       })
-
+})();
       // dbPromise.then(function(db) {
       //   var tx = db.transaction('restaurants', 'readonly');
       //   var store = tx.objectStore('restaurants');
       //   store.getAll();
       // });
       // };
-
-})();
