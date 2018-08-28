@@ -4,8 +4,7 @@
  */
 
 
- const dbPromise = idb.open('restaurant-idb', 1,
- function(upgradeDb) {
+ const dbPromise = idb.open('restaurant-idb', 1, function(upgradeDb) {
    if (!upgradeDb.objectStoreNames.contains('restaurants')) {
       const foodOs = upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
       // Neighborhood objectStore -- foodOs.createIndex('boro_name', 'neighborhood', {unique: false});
@@ -19,7 +18,6 @@ class DBHelper {
    * Database URL.
    * Change this to restaurants.json file location on your server.
    */
-   // 'use strict';
    static get DATABASE_URL() {
      const port = 1337; //Change this to your server port
      // stage1:
@@ -131,7 +129,7 @@ class DBHelper {
           console.log('Problem with: \n', error);
         });
       })
-
+  }
   /**
    * Fetch a restaurant by its ID.
    */
