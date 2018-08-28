@@ -17,8 +17,8 @@ var filesToCache = [
   'img/8.jpg',
   'img/9.jpg',
   'img/10.jpg',
-  'data/restaurants.json',
-  'index.js',
+  // 'data/restaurants.json',
+  // 'index.js',
   'sw.js'
 ];
 
