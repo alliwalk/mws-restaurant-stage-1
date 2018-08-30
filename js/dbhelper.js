@@ -7,8 +7,8 @@
  const dbPromise = idb.open('restaurant-idb', 1, function(upgradeDb) {
    if (!upgradeDb.objectStoreNames.contains('restaurants')) {
       const foodOs = upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
-      // Neighborhood objectStore -- foodOs.createIndex('boro_name', 'neighborhood', {unique: false});
-      // Cuisine objectStore -- foodOs.createIndex('cuis_name', 'cuisine_type', {unique: false});
+        foodOs.createIndex('boro_name', 'neighborhood', {unique: false});
+        foodOs.createIndex('cuis_name', 'cuisine_type', {unique: false});
       }
    console.log("ObjectStore: Created restaurants");
    });
@@ -107,47 +107,69 @@ class DBHelper {
     //   }
     // };
     // xhr.send();
-        fetch(DBHelper.DATABASE_URL)
-          .then(function(response) {
-           if(!response.ok){
-            throw new Error('ERROR: response not ok.')
-            }
-          return response.json().then(function(myJson) {
+    for (var j = 0; j < 2; j++){
+      fetch(DBHelper.DATABASE_URL)
+        .then(function(response) {
+         if(!response.ok){
+           throw new Error('ERROR: response not ok.')
+         } else {
+            return response.json().then(function(myJson) {
               dbPromise.then(function(db) {
-              var tx = db.transaction('restaurants', 'readwrite');
-              var store = tx.objectStore('restaurants');
-              console.log("ObjectStore: Restaurant object");
-              // store.add( {id: '6'});
-              for(var i = 0; i < store.length; i++){
-                store.add(i);
-              }
-              console.log("ObjectStore: For loop called");
-              return tx.complete;
-            })
-          console.log('myJson is returned');
-        }).catch(function(error){
-          console.log('Problem with: \n', error);
-        });
-      })
-  }
+                var tx = db.transaction('restaurants', 'readwrite');
+                var store = tx.objectStore('restaurants');
+                for (var i = 0; i < 10; i++){
+                  console.log("ObjectStore: Restaurant object" + i);
+                }
+                    store.add(myJson);
+                console.log("ObjectStore: add all called");
+                return tx.complete;
+              }) // close dbPromise
+              console.log('myJson is returned');
+            }).catch(function(error){
+              console.log('Problem with: \n', error);
+            });
+          } //end else
+        })
+      }
+    }
   /**
    * Fetch a restaurant by its ID.
    */
   static fetchRestaurantById(id, callback) {
-    // fetch all restaurants with proper error handling.
-    DBHelper.fetchRestaurants((error, restaurants) => {
-      if (error) {
-        callback(error, null);
-      } else {
-        const restaurant = restaurants.find(r => r.id == id);
-        if (restaurant) { // Got the restaurant
-          callback(null, restaurant);
-        } else { // Restaurant does not exist in the database
-          callback('Restaurant does not exist', null);
-        }
-      }
-    });
-  }
+    // // fetch all restaurants with proper error handling.
+    // // DBHelper.fetchRestaurants((error, restaurants) => {
+    //   // if (error) {
+    //   //   callback(error, null);
+    //   } else {
+    //     const restaurant = restaurants.find(r => r.id == id);
+    //     if (restaurant) { // Got the restaurant
+    //       callback(null, restaurant);
+    //     } else { // Restaurant does not exist in the database
+    //       callback('Restaurant does not exist', null);
+    //     }
+    //   }
+    // });
+
+    fetch(DBHelper.DATABASE_URL)
+      .then(function(response) {
+       if(!response.ok){
+         throw new Error('ERROR: response not ok.')
+       } else {
+          return response.json().then(function(myJson) {
+            dbPromise.then(function(db) {
+              var tx = db.transaction('id');
+              var store = tx.objectStore('restaurants');
+              // var boroIndex = store.index('neighborhood');
+              return store.getAll();
+            }).then(function(myJson) {
+              console.log('Restaurants by id:', restaurants);
+            });
+          // }).catch(function(error){
+          //   console.log('Problem with: \n', error);
+          });
+        } //end else
+      })
+    }
 
   /**
    * Fetch restaurants by a cuisine type with proper error handling.
@@ -161,7 +183,7 @@ class DBHelper {
         // Filter restaurants to have only given cuisine type
         const results = restaurants.filter(r => r.cuisine_type == cuisine);
         callback(null, results);
-      }
+      } 
     });
   }
 
@@ -244,17 +266,17 @@ class DBHelper {
   static urlForRestaurant(restaurant) {
     return (`./restaurant.html?id=${restaurant.id}`);
   }
-
-  /**
-   * Restaurant image URL.
-   */
+//
+//   /**
+//    * Restaurant image URL.
+//    */
   static imageUrlForRestaurant(restaurant) {
     return (`/img/${restaurant.photograph}`);
   }
-  //
-  // /**
-  //  * Map marker for a restaurant.
-  //  */
+//   //
+//   // /**
+//   //  * Map marker for a restaurant.
+//   //  */
    static mapMarkerForRestaurant(restaurant, map) {
     // https://leafletjs.com/reference-1.3.0.html#marker
     const marker = new L.marker([restaurant.latlng.lat, restaurant.latlng.lng],
