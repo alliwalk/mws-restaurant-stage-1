@@ -25,42 +25,6 @@ class DBHelper {
      return `http://localhost:${port}/restaurants/`;
     }
 
-    // (function() {
-    // static fetchRestaurants(callback){
-    //   return fetch(DBHelper.DATABASE_URL)
-    //   .then(function(response) {
-    //     console.log(response); //do stuff
-    //     response.json();
-    //   }.then(function(restaurants){
-    //     dbPromise.then(function(db))
-    //     console.log(restaurants)
-    //   })
-
-    // adnan
-//     static fetchRestaurants(callback) {
-//         return fetch(DBHelper.DATABASE_URL)
-//         .then(response => response.json()) // return JSON from the server
-//         .then(restaurants => callback(null, restaurants));
-//         .catch(error => {
-//         const errorMessage = (`Request failed. Returned status of ${error.statusText}`);
-//         callback(errorMessage, null);
-//        });
-//       }
-//
-//
-//       dbPromise.then(function(db) {
-//       var tx = db.transaction('restaurants', 'readwrite');
-//       var store = tx.objectStore('restaurants');
-//       console.log("ObjectStore: Restaurant object");
-//       restaurants.forEach(restaurant => {
-//         store.add(restaurant);
-//       })
-//       return tx.complete;
-//       });
-//
-//
-// }
-
   /**
    * Fetch all restaurants.
    */
@@ -75,20 +39,10 @@ class DBHelper {
               dbPromise.then(function(db) {
                 var tx = db.transaction('restaurants', 'readwrite');
                 var store = tx.objectStore('restaurants');
-
-                store.openCursor().onsuccess = function(event) {
-                  var cursor = event.target.result;
-                  if(cursor){
-                    store.add(myJson);
-
-                    cursor.continue();
-                  } else {
-                    console.log('Entries added')
-                  }
-                }
                 // for (var i = 0; i < 10; i++){
                   // console.log("ObjectStore: Restaurant object" + i);
                 // }
+                store.add(myJson);
                 console.log("ObjectStore: add all called");
                 return tx.complete;
               }) // close dbPromise
