@@ -7,8 +7,8 @@
  const dbPromise = idb.open('restaurant-idb', 1, function(upgradeDb) {
    if (!upgradeDb.objectStoreNames.contains('restaurants')) {
       const foodOs = upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
-        foodOs.createIndex('boro_name', 'neighborhood', {unique: false});
-        foodOs.createIndex('cuis_name', 'cuisine_type', {unique: false});
+        // foodOs.createIndex('boro_name', 'neighborhood', {unique: false});
+        // foodOs.createIndex('cuis_name', 'cuisine_type', {unique: false});
       }
    console.log("ObjectStore: Created restaurants");
    });
@@ -24,90 +24,11 @@ class DBHelper {
      // return `http://localhost:${port}/data/restaurants.json`;
      return `http://localhost:${port}/restaurants/`;
     }
-
-    // (function() {
-
-    //check for support
-    // if (!('indexedDB' in window)) {
-    //   console.log('This browser doesn\'t support IndexedDB');
-    //   return;
-    //   }
-      // const dbPromise = idb.open('restaurant-idb', 1,
-      // function(upgradeDb) {
-      //   if (!upgradeDb.objectStoreNames.contains('restaurants')) {
-      //      const foodOs = upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
-      //      // Neighborhood objectStore -- foodOs.createIndex('boro_name', 'neighborhood', {unique: false});
-      //      // Cuisine objectStore -- foodOs.createIndex('cuis_name', 'cuisine_type', {unique: false});
-      //      }
-      //   console.log("ObjectStore: Created restaurants");
-      //   });
-          // var rests = JSON.parse();
-
-        //   dbPromise.then(function(db) {
-        //   var tx = db.transaction('restaurants', 'readwrite');
-        //   var store = tx.objectStore('restaurants');
-        //   console.log("ObjectStore: Restaurant object");
-        //   store.add( {id: '6'});
-        //   for(var i = 0; i < store.length; i++){
-        //     store.add(i);
-        //   )
-        //   return tx.complete;
-        // })
-
-
-    // static fetchRestaurants(callback){
-    //   return fetch(DBHelper.DATABASE_URL)
-    //   .then(function(response) {
-    //     console.log(response); //do stuff
-    //     response.json();
-    //   }.then(function(restaurants){
-    //     dbPromise.then(function(db))
-    //     console.log(restaurants)
-    //   })
-
-    // adnan
-//     static fetchRestaurants(callback) {
-//         return fetch(DBHelper.DATABASE_URL)
-//         .then(response => response.json()) // return JSON from the server
-//         .then(restaurants => callback(null, restaurants));
-//         .catch(error => {
-//         const errorMessage = (`Request failed. Returned status of ${error.statusText}`);
-//         callback(errorMessage, null);
-//        });
-//       }
-//
-//
-//       dbPromise.then(function(db) {
-//       var tx = db.transaction('restaurants', 'readwrite');
-//       var store = tx.objectStore('restaurants');
-//       console.log("ObjectStore: Restaurant object");
-//       restaurants.forEach(restaurant => {
-//         store.add(restaurant);
-//       })
-//       return tx.complete;
-//       });
-//
-//
-// }
-
   /**
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    // let xhr = new XMLHttpRequest();
-    // xhr.open('GET', DBHelper.DATABASE_URL);
-    // xhr.onload = () => {
-    //   if (xhr.status === 200) { // Got a success response from server!
-    //     const json = JSON.parse(xhr.responseText);
-    //     const restaurants = json; // don't need .restaurants
-    //     callback(null, restaurants);
-    //   } else { // Oops!. Got an error from server.
-    //     const error = (`Request failed. Returned status of ${xhr.status}`);
-    //     callback(error, null);
-    //   }
-    // };
-    // xhr.send();
-    for (var j = 0; j < 2; j++){
+    // for (var j = 0; j < 2; j++){
       fetch(DBHelper.DATABASE_URL)
         .then(function(response) {
          if(!response.ok){
@@ -117,38 +38,29 @@ class DBHelper {
               dbPromise.then(function(db) {
                 var tx = db.transaction('restaurants', 'readwrite');
                 var store = tx.objectStore('restaurants');
-                for (var i = 0; i < 10; i++){
+                return store;
+                // var obj = JSON.parse(myJson);
+                for (var i = 0; i < store.myJson.length; i++){
                   console.log("ObjectStore: Restaurant object" + i);
+                    for(var key in store.myJson[i]){
+                      var day = store.myJson[i][key];
+                    }
                 }
-                    store.add(myJson);
                 console.log("ObjectStore: add all called");
                 return tx.complete;
               }) // close dbPromise
-              console.log('myJson is returned');
+              // console.log('myJson is returned');
             }).catch(function(error){
               console.log('Problem with: \n', error);
             });
           } //end else
         })
       }
-    }
+    // }
   /**
    * Fetch a restaurant by its ID.
    */
   static fetchRestaurantById(id, callback) {
-    // // fetch all restaurants with proper error handling.
-    // // DBHelper.fetchRestaurants((error, restaurants) => {
-    //   // if (error) {
-    //   //   callback(error, null);
-    //   } else {
-    //     const restaurant = restaurants.find(r => r.id == id);
-    //     if (restaurant) { // Got the restaurant
-    //       callback(null, restaurant);
-    //     } else { // Restaurant does not exist in the database
-    //       callback('Restaurant does not exist', null);
-    //     }
-    //   }
-    // });
 
     fetch(DBHelper.DATABASE_URL)
       .then(function(response) {
@@ -159,10 +71,9 @@ class DBHelper {
             dbPromise.then(function(db) {
               var tx = db.transaction('id');
               var store = tx.objectStore('restaurants');
-              // var boroIndex = store.index('neighborhood');
-              return store.getAll();
+              return store.getAll(myJson);
             }).then(function(myJson) {
-              console.log('Restaurants by id:', restaurants);
+              console.log('jerky');
             });
           // }).catch(function(error){
           //   console.log('Problem with: \n', error);
@@ -181,9 +92,10 @@ class DBHelper {
         callback(error, null);
       } else {
         // Filter restaurants to have only given cuisine type
+
         const results = restaurants.filter(r => r.cuisine_type == cuisine);
         callback(null, results);
-      } 
+      }
     });
   }
 
@@ -212,7 +124,7 @@ class DBHelper {
       if (error) {
         callback(error, null);
       } else {
-        let results = restaurants
+        let results = restaurants;
         if (cuisine != 'all') { // filter by cuisine
           results = results.filter(r => r.cuisine_type == cuisine);
         }
