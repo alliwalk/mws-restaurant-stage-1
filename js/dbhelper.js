@@ -7,8 +7,6 @@
  const dbPromise = idb.open('restaurant-idb', 1, function(upgradeDb) {
    if (!upgradeDb.objectStoreNames.contains('restaurants')) {
       const foodOs = upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
-        // foodOs.createIndex('boro_name', 'neighborhood', {unique: false});
-        // foodOs.createIndex('cuis_name', 'cuisine_type', {unique: false});
       }
    console.log("ObjectStore: Created restaurants");
    });
@@ -32,28 +30,27 @@ class DBHelper {
     // for (var j = 0; j < 2; j++){
       fetch(DBHelper.DATABASE_URL)
         .then(function(response) {
-         if(!response.ok){
-           throw new Error('ERROR: response not ok.')
-         } else {
-            return response.json().then(function(myJson) {
-              dbPromise.then(function(db) {
-                var tx = db.transaction('restaurants', 'readwrite');
-                var store = tx.objectStore('restaurants');
-                // for (var i = 0; i < 10; i++){
-                  // console.log("ObjectStore: Restaurant object" + i);
-                // }
-                store.add(myJson);
-                console.log("ObjectStore: add all called");
-                return tx.complete;
-              }) // close dbPromise
-              // console.log('myJson is returned');
-            }).catch(function(error){
-              console.log('Problem with: \n', error);
-            });
-          } //end else
-        })
-      }
-    // }
+          if(!response.ok){
+              throw new Error('ERROR: response not ok.')
+            } else {
+              return response.json();
+            } //end else
+        }.then(function(myJson) {
+          for (var i = 0; i < myJson.response.length; i++){
+            dbPromise.then(function(db) {
+              var tx = db.transaction('restaurants', 'readwrite');
+              var store = tx.objectStore('restaurants');
+              store.add(response);
+            })
+          }
+          console.log("ObjectStore: add all called");
+          return tx.complete;
+        }).catch(function(error){
+          console.log('Problem with: \n', error);
+        });
+      );
+    }
+  };
   /**
    * Fetch a restaurant by its ID.
    */
