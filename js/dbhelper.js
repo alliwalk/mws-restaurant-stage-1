@@ -1,4 +1,3 @@
-
 /**
  * Common database helper functions.
  */
@@ -7,6 +6,8 @@
  const dbPromise = idb.open('restaurant-idb', 1, function(upgradeDb) {
    if (!upgradeDb.objectStoreNames.contains('restaurants')) {
       const foodOs = upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
+        foodOs.createIndex('boro_name', 'neighborhood', {unique: false});
+        foodOs.createIndex('cuis_name', 'cuisine_type', {unique: false});
       }
    console.log("ObjectStore: Created restaurants");
    });
@@ -27,34 +28,56 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    // for (var j = 0; j < 2; j++){
-      fetch(DBHelper.DATABASE_URL)
-        .then(function(response) {
+    for (var j = 0; j < 1; j++){
+      fetch(DBHelper.DATABASE_URL).then(function(response) {
           if(!response.ok){
-              throw new Error('ERROR: response not ok.')
-            } else {
-              return response.json();
-            } //end else
-        }.then(function(myJson) {
-          for (var i = 0; i < myJson.response.length; i++){
-            dbPromise.then(function(db) {
-              var tx = db.transaction('restaurants', 'readwrite');
-              var store = tx.objectStore('restaurants');
-              store.add(response);
-            })
-          }
-          console.log("ObjectStore: add all called");
-          return tx.complete;
-        }).catch(function(error){
-          console.log('Problem with: \n', error);
-        });
-      );
+            throw new Error('ERROR: response not ok.')
+          } else {
+            return response.json().then(function(myJson) {
+
+              dbPromise.then(function(db) {
+                var tx = db.transaction('restaurants', 'readwrite');
+                var store = tx.objectStore('restaurants');
+
+                for (var i = 0; i < 10; i++) {
+                  console.log("ObjectStore: Restaurant object" + i);
+                }
+                // end loop
+
+                store.add(myJson);
+                console.log("ObjectStore: add all called");
+                return tx.complete;
+              })
+              // close dbPromise
+
+            console.log('myJson is returned');
+
+            }).catch(function(error){
+              console.log('Problem with: \n', error);
+            });
+
+          } //end else
+          console.log("out of all the stuff");
+        })
+      }
     }
-  };
   /**
    * Fetch a restaurant by its ID.
    */
   static fetchRestaurantById(id, callback) {
+    // // fetch all restaurants with proper error handling.
+    DBHelper.fetchRestaurants((error, restaurants) => {
+      if (error) {
+        callback(error, null);
+      } else {
+        const restaurant = restaurants.find(r => r.id == id);
+        if (restaurant) { // Got the restaurant
+          callback(null, restaurant);
+        } else { // Restaurant does not exist in the database
+          callback('Restaurant does not exist', null);
+        }
+      }
+    });
 
     fetch(DBHelper.DATABASE_URL)
       .then(function(response) {
@@ -65,9 +88,10 @@ class DBHelper {
             dbPromise.then(function(db) {
               var tx = db.transaction('id');
               var store = tx.objectStore('restaurants');
-              return store.getAll(myJson);
+              // var boroIndex = store.index('neighborhood');
+              return store.getAll();
             }).then(function(myJson) {
-              console.log('jerky');
+              console.log('Restaurants by id:', restaurants);
             });
           // }).catch(function(error){
           //   console.log('Problem with: \n', error);
@@ -86,7 +110,6 @@ class DBHelper {
         callback(error, null);
       } else {
         // Filter restaurants to have only given cuisine type
-
         const results = restaurants.filter(r => r.cuisine_type == cuisine);
         callback(null, results);
       }
@@ -118,7 +141,7 @@ class DBHelper {
       if (error) {
         callback(error, null);
       } else {
-        let results = restaurants;
+        let results = restaurants
         if (cuisine != 'all') { // filter by cuisine
           results = results.filter(r => r.cuisine_type == cuisine);
         }
