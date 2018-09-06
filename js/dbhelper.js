@@ -6,8 +6,8 @@
  const dbPromise = idb.open('restaurant-idb', 1, function(upgradeDb) {
    if (!upgradeDb.objectStoreNames.contains('restaurants')) {
       const foodOs = upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
-        foodOs.createIndex('boro_name', 'neighborhood', {unique: false});
-        foodOs.createIndex('cuis_name', 'cuisine_type', {unique: false});
+        // foodOs.createIndex('boro_name', 'neighborhood', {unique: false});
+        // foodOs.createIndex('cuis_name', 'cuisine_type', {unique: false});
       }
    console.log("ObjectStore: Created restaurants");
    });
@@ -28,7 +28,6 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    for (var j = 0; j < 1; j++){
       fetch(DBHelper.DATABASE_URL).then(function(response) {
           if(!response.ok){
             throw new Error('ERROR: response not ok.')
@@ -38,12 +37,6 @@ class DBHelper {
               dbPromise.then(function(db) {
                 var tx = db.transaction('restaurants', 'readwrite');
                 var store = tx.objectStore('restaurants');
-
-                for (var i = 0; i < 10; i++) {
-                  console.log("ObjectStore: Restaurant object" + i);
-                }
-                // end loop
-
                 store.add(myJson);
                 console.log("ObjectStore: add all called");
                 return tx.complete;
@@ -58,9 +51,12 @@ class DBHelper {
 
           } //end else
           console.log("out of all the stuff");
+          // This never runs
         })
-      }
+        console.log("is it here yet?");
     }
+
+
   /**
    * Fetch a restaurant by its ID.
    */
