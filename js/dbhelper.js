@@ -37,7 +37,15 @@ class DBHelper {
               dbPromise.then(function(db) {
                 var tx = db.transaction('restaurants', 'readwrite');
                 var store = tx.objectStore('restaurants');
-                store.add(myJson);
+
+                var array1 = myJson;
+
+                array1.forEach(function(elements){
+                  console.log(elements);
+                  store.add(elements);
+                });
+
+                // store.add(myJson);
                 console.log("ObjectStore: add all called");
                 return tx.complete;
               })
