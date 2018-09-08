@@ -11,27 +11,30 @@
     function(upgradeDb) {
       if (!upgradeDb.objectStoreNames.contains('restaurants')) {
          var foodOs = upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
-         // Neighborhood objectStore -- foodOs.createIndex('boro_name', 'neighborhood', {unique: false});
-         // Cuisine objectStore -- foodOs.createIndex('cuis_name', 'cuisine_type', {unique: false});
          }
       console.log("ObjectStore: Created restaurants");
       });
-      // var rests = JSON.parse();
 
-        dbPromise.then(function(db) {
+    dbPromise.then(function(db) {
+        var tx = db.transaction('restaurants', 'readonly');
+        var store = tx.objectStore('restaurants');
+        store.getAll();
+        }).then(function() {
+          console.log('get all the json');
+        });
+
+      dbPromise.then(function(db) {
         var tx = db.transaction('restaurants', 'readwrite');
         var store = tx.objectStore('restaurants');
-        console.log("ObjectStore: Restaurant object");
-        store.add( {id: '6'});
-        for(var i = 0; i < store.length; i++){
-          store.add(i);
-        )
+        var array1 = myJson;
+        array1.forEach(function(elements){
+          store.add(elements);
+          });
+        console.log("ObjectStore: elements added");
         return tx.complete;
-      })
+      }).then(function() {
+      console.log('myJson is returned');
+      });
 })();
-      // dbPromise.then(function(db) {
-      //   var tx = db.transaction('restaurants', 'readonly');
-      //   var store = tx.objectStore('restaurants');
-      //   store.getAll();
-      // });
+
       // };
