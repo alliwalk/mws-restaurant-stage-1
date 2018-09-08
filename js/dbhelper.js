@@ -3,7 +3,7 @@
  */
 
 
- var dbPromise = idb.open('restaurant-idb', 1, function(upgradeDb){
+ var dbPromise = idb.open('restaurant-idb', 1, upgradeDb => {
    if (!upgradeDb.objectStoreNames.contains('restaurants')) {
       const foodOs = upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
         foodOs.createIndex('boro_name', 'neighborhood', {unique: false});
@@ -29,29 +29,29 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    dbPromise.then(function(db) {
+    dbPromise.then(db => {
       var tx = db.transaction('restaurants');
       var store = tx.objectStore('restaurants');
 
         return store.getAll('restaurants');
       console.log("ObjectStore: getting all the stuff");
       // return tx.complete;
-      }).then(function(items) {
+      }).then(items => {
           console.log("Items by name: ", items);
       });
 
-    fetch(DBHelper.DATABASE_URL).then(function(response) {
+    fetch(DBHelper.DATABASE_URL).then(response => {
       if(!response.ok){
         throw new Error('ERROR: response not ok.')
       }
       // else {
-        return response.json().then(function(myJson) {
+        return response.json().then(myJson => {
             // create db and put stuff in
-            dbPromise.then(function(db) {
+            dbPromise.then(db => {
               var tx = db.transaction('restaurants', 'readwrite');
               var store = tx.objectStore('restaurants');
               var array1 = myJson;
-              array1.forEach(function(elements){
+              array1.forEach(elements =>{
                 store.add(elements);
               });
               console.log("ObjectStore: elements added");
