@@ -1,4 +1,3 @@
-// debugger;
 /**
  * Common database helper functions.
  */
@@ -6,11 +5,13 @@
  var dbPromise = idb.open('restaurant-idb', 1, upgradeDb => {
    if (!upgradeDb.objectStoreNames.contains('restaurants')) {
       const foodOs = upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
+        foodOs.createIndex('rest_name', 'name', {unique: true});
         foodOs.createIndex('boro_name', 'neighborhood', {unique: false});
         foodOs.createIndex('cuis_name', 'cuisine_type', {unique: false});
       }
    console.log("ObjectStore: Created restaurants");
    });
+
 
 
 class DBHelper {
@@ -23,9 +24,8 @@ class DBHelper {
      // return `http://localhost:${port}/data/restaurants.json`;
      return `http://localhost:${port}/restaurants/`;
     }
-
   /**
-   * Fetch all restaurants.
+    Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
    // var stuffs = dbPromise.then(db => {
@@ -44,32 +44,29 @@ class DBHelper {
     fetch(DBHelper.DATABASE_URL).then(response => {
       if(!response.ok){
         throw new Error('ERROR: response not ok.')
-      }
-      // else {
-        return response.json().then(myJson => {
-            // create db and put stuff in
-            dbPromise.then(db => {
-              var tx = db.transaction('restaurants', 'readwrite');
-              var store = tx.objectStore('restaurants');
-              myJson.forEach(elements => {
-                store.add(elements);
-              });
-              console.log("ObjectStore: elements added");
-              return tx.complete;
-            }).then(function() {
-            // close dbPromise
-            console.log('myJson is returned');
+      } return response.json().then(myJson => {
+          // create db and put stuff in
+          dbPromise.then(db => {
+            var tx = db.transaction('restaurants', 'readwrite');
+            var store = tx.objectStore('restaurants');
+            myJson.forEach(element => {
+              store.put(element);
             });
+            console.log("ObjectStore: elements added");
+            return tx.complete;
+          }).then(function() {
+          // close dbPromise
+          console.log('myJson is returned');
+          });
+      }).catch(error => {
+        console.log('Problem with: \n', error);
+      });
+    // } //end else
+    console.log("out of all the stuff");
+  })
+  console.log("is it here yet?");
+}
 
-        }).catch(error => {
-          console.log('Problem with: \n', error);
-        });
-
-      // } //end else
-      console.log("out of all the stuff");
-    })
-    console.log("is it here yet?");
-  }
 
 
   /**
