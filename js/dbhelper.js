@@ -3,7 +3,7 @@
  */
 
 
- const dbPromise = idb.open('restaurant-idb', 1, function(upgradeDb){
+ var dbPromise = idb.open('restaurant-idb', 1, function(upgradeDb){
    if (!upgradeDb.objectStoreNames.contains('restaurants')) {
       const foodOs = upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
         foodOs.createIndex('boro_name', 'neighborhood', {unique: false});
@@ -43,7 +43,8 @@ class DBHelper {
     fetch(DBHelper.DATABASE_URL).then(function(response) {
       if(!response.ok){
         throw new Error('ERROR: response not ok.')
-      } else {
+      }
+      // else {
         return response.json().then(function(myJson) {
             // create db and put stuff in
             dbPromise.then(function(db) {
@@ -64,9 +65,8 @@ class DBHelper {
           console.log('Problem with: \n', error);
         });
 
-      } //end else
+      // } //end else
       console.log("out of all the stuff");
-      // This never runs
     })
     console.log("is it here yet?");
   }
@@ -91,25 +91,7 @@ class DBHelper {
       }
     });
 
-    // fetch(DBHelper.DATABASE_URL)
-    //   .then(function(response) {
-    //    if(!response.ok){
-    //      throw new Error('ERROR: response not ok.')
-    //    } else {
-    //       return response.json().then(function(myJson) {
-    //         dbPromise.then(function(db) {
-    //           var tx = db.transaction('id');
-    //           var store = tx.objectStore('restaurants');
-    //           return store.getAll();
-    //         }).then(function() {
-    //           console.log('Restaurants by id:', restaurants);
-    //         });
-    //       // }).catch(function(error){
-    //       //   console.log('Problem with: \n', error);
-    //       });
-    //     } //end else
-    //   })
-    }
+  }
 
 
 
