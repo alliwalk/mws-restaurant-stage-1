@@ -1,7 +1,7 @@
+// debugger;
 /**
  * Common database helper functions.
  */
-
 
  var dbPromise = idb.open('restaurant-idb', 1, upgradeDb => {
    if (!upgradeDb.objectStoreNames.contains('restaurants')) {
@@ -15,8 +15,7 @@
 
 class DBHelper {
   /**
-   * Database URL.
-   * Change this to restaurants.json file location on your server.
+   * Database URL. Change this to restaurants.json file location on your server.
    */
    static get DATABASE_URL() {
      const port = 1337; //Change this to your server port
@@ -29,16 +28,18 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    // dbPromise.then(db => {
-    //   var tx = db.transaction('restaurants');
-    //   var store = tx.objectStore('restaurants');
-    //
-    //     return store.getAll('restaurants');
-    //   console.log("ObjectStore: getting all the stuff");
-    //   // return tx.complete;
-    //   }).then(items => {
-    //       console.log("Items by name: ", items);
-    //   });
+   // var stuffs = dbPromise.then(db => {
+   //    var tx = db.transaction('restaurants');
+   //    var store = tx.objectStore('restaurants');
+   //      return store.getAll('restaurants');
+   //
+   //    console.log("ObjectStore: getting all the stuff");
+   //      return stuffs;
+   //
+   //    }).then(items => {
+   //
+   //        console.log("Items by name: ", items);
+   //    });
 
     fetch(DBHelper.DATABASE_URL).then(response => {
       if(!response.ok){
@@ -50,7 +51,7 @@ class DBHelper {
             dbPromise.then(db => {
               var tx = db.transaction('restaurants', 'readwrite');
               var store = tx.objectStore('restaurants');
-              myJson.forEach(elements =>{
+              myJson.forEach(elements => {
                 store.add(elements);
               });
               console.log("ObjectStore: elements added");
@@ -60,7 +61,7 @@ class DBHelper {
             console.log('myJson is returned');
             });
 
-        }).catch(function(error){
+        }).catch(error => {
           console.log('Problem with: \n', error);
         });
 
