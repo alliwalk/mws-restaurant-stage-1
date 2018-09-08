@@ -29,16 +29,16 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    dbPromise.then(db => {
-      var tx = db.transaction('restaurants');
-      var store = tx.objectStore('restaurants');
-
-        return store.getAll('restaurants');
-      console.log("ObjectStore: getting all the stuff");
-      // return tx.complete;
-      }).then(items => {
-          console.log("Items by name: ", items);
-      });
+    // dbPromise.then(db => {
+    //   var tx = db.transaction('restaurants');
+    //   var store = tx.objectStore('restaurants');
+    //
+    //     return store.getAll('restaurants');
+    //   console.log("ObjectStore: getting all the stuff");
+    //   // return tx.complete;
+    //   }).then(items => {
+    //       console.log("Items by name: ", items);
+    //   });
 
     fetch(DBHelper.DATABASE_URL).then(response => {
       if(!response.ok){
@@ -50,8 +50,7 @@ class DBHelper {
             dbPromise.then(db => {
               var tx = db.transaction('restaurants', 'readwrite');
               var store = tx.objectStore('restaurants');
-              var array1 = myJson;
-              array1.forEach(elements =>{
+              myJson.forEach(elements =>{
                 store.add(elements);
               });
               console.log("ObjectStore: elements added");
