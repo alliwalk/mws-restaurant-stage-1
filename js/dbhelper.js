@@ -3,14 +3,15 @@
  */
 
 
- const dbPromise = idb.open('restaurant-idb', 1, function(upgradeDb) {
+ const dbPromise = idb.open('restaurant-idb', 1, function(upgradeDb){
    if (!upgradeDb.objectStoreNames.contains('restaurants')) {
       const foodOs = upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
-        // foodOs.createIndex('boro_name', 'neighborhood', {unique: false});
-        // foodOs.createIndex('cuis_name', 'cuisine_type', {unique: false});
+        foodOs.createIndex('boro_name', 'neighborhood', {unique: false});
+        foodOs.createIndex('cuis_name', 'cuisine_type', {unique: false});
       }
    console.log("ObjectStore: Created restaurants");
    });
+
 
 class DBHelper {
   /**
@@ -28,45 +29,52 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-      fetch(DBHelper.DATABASE_URL).then(function(response) {
-          if(!response.ok){
-            throw new Error('ERROR: response not ok.')
-          } else {
-            return response.json().then(function(myJson) {
+    dbPromise.then(function(db) {
+      var tx = db.transaction('restaurants');
+      var store = tx.objectStore('restaurants');
 
-              dbPromise.then(function(db) {
-                var tx = db.transaction('restaurants', 'readwrite');
-                var store = tx.objectStore('restaurants');
+        return store.getAll('restaurants');
+      console.log("ObjectStore: getting all the stuff");
+      // return tx.complete;
+      }).then(function(items) {
+          console.log("Items by name: ", items);
+      });
 
-                var array1 = myJson;
-
-                array1.forEach(function(elements){
-                  console.log(elements);
-                  store.add(elements);
-                });
-
-                // store.add(myJson);
-                console.log("ObjectStore: add all called");
-                return tx.complete;
-              })
-              // close dbPromise
-
+    fetch(DBHelper.DATABASE_URL).then(function(response) {
+      if(!response.ok){
+        throw new Error('ERROR: response not ok.')
+      } else {
+        return response.json().then(function(myJson) {
+            // create db and put stuff in
+            dbPromise.then(function(db) {
+              var tx = db.transaction('restaurants', 'readwrite');
+              var store = tx.objectStore('restaurants');
+              var array1 = myJson;
+              array1.forEach(function(elements){
+                store.add(elements);
+              });
+              console.log("ObjectStore: elements added");
+              return tx.complete;
+            }).then(function() {
+            // close dbPromise
             console.log('myJson is returned');
-
-            }).catch(function(error){
-              console.log('Problem with: \n', error);
             });
 
-          } //end else
-          console.log("out of all the stuff");
-          // This never runs
-        })
-        console.log("is it here yet?");
-    }
+        }).catch(function(error){
+          console.log('Problem with: \n', error);
+        });
+
+      } //end else
+      console.log("out of all the stuff");
+      // This never runs
+    })
+    console.log("is it here yet?");
+  }
 
 
   /**
    * Fetch a restaurant by its ID.
+   1
    */
   static fetchRestaurantById(id, callback) {
     // // fetch all restaurants with proper error handling.
@@ -83,29 +91,31 @@ class DBHelper {
       }
     });
 
-    fetch(DBHelper.DATABASE_URL)
-      .then(function(response) {
-       if(!response.ok){
-         throw new Error('ERROR: response not ok.')
-       } else {
-          return response.json().then(function(myJson) {
-            dbPromise.then(function(db) {
-              var tx = db.transaction('id');
-              var store = tx.objectStore('restaurants');
-              // var boroIndex = store.index('neighborhood');
-              return store.getAll();
-            }).then(function(myJson) {
-              console.log('Restaurants by id:', restaurants);
-            });
-          // }).catch(function(error){
-          //   console.log('Problem with: \n', error);
-          });
-        } //end else
-      })
+    // fetch(DBHelper.DATABASE_URL)
+    //   .then(function(response) {
+    //    if(!response.ok){
+    //      throw new Error('ERROR: response not ok.')
+    //    } else {
+    //       return response.json().then(function(myJson) {
+    //         dbPromise.then(function(db) {
+    //           var tx = db.transaction('id');
+    //           var store = tx.objectStore('restaurants');
+    //           return store.getAll();
+    //         }).then(function() {
+    //           console.log('Restaurants by id:', restaurants);
+    //         });
+    //       // }).catch(function(error){
+    //       //   console.log('Problem with: \n', error);
+    //       });
+    //     } //end else
+    //   })
     }
+
+
 
   /**
    * Fetch restaurants by a cuisine type with proper error handling.
+   2
    */
   static fetchRestaurantByCuisine(cuisine, callback) {
     // Fetch all restaurants  with proper error handling
@@ -122,6 +132,7 @@ class DBHelper {
 
   /**
    * Fetch restaurants by a neighborhood with proper error handling.
+   3
    */
   static fetchRestaurantByNeighborhood(neighborhood, callback) {
     // Fetch all restaurants
@@ -138,6 +149,7 @@ class DBHelper {
 
   /**
    * Fetch restaurants by a cuisine and a neighborhood with proper error handling.
+   4
   //  */
   static fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, callback) {
     // Fetch all restaurants
@@ -159,6 +171,7 @@ class DBHelper {
 
   /**
    * Fetch all neighborhoods with proper error handling.
+   5
    */
   static fetchNeighborhoods(callback) {
     // Fetch all restaurants
@@ -177,6 +190,7 @@ class DBHelper {
 
   /**
    * Fetch all cuisines with proper error handling.
+   6
    */
   static fetchCuisines(callback) {
     // Fetch all restaurants
