@@ -1,6 +1,4 @@
-/**
- * Common database helper functions.
- */
+/* Common database helper functions. */
 
  var dbPromise = idb.open('restaurant-idb', 1, upgradeDb => {
    if (!upgradeDb.objectStoreNames.contains('restaurants')) {
@@ -12,21 +10,13 @@
    console.log("ObjectStore: Created restaurants");
    });
 
-
-
 class DBHelper {
-  /**
-   * Database URL. Change this to restaurants.json file location on your server.
-   */
+  /* Database URL. Change this to restaurants.json file location on your server. */
    static get DATABASE_URL() {
      const port = 1337; //Change this to your server port
-     // stage1:
-     // return `http://localhost:${port}/data/restaurants.json`;
      return `http://localhost:${port}/restaurants/`;
     }
-  /**
-    Fetch all restaurants.
-   */
+  /* Fetch all restaurants. */
   static fetchRestaurants(callback) {
    // var stuffs = dbPromise.then(db => {
    //    var tx = db.transaction('restaurants');
@@ -41,38 +31,36 @@ class DBHelper {
    //        console.log("Items by name: ", items);
    //    });
 
+  /** myJson = response **/
     fetch(DBHelper.DATABASE_URL).then(response => {
       if(!response.ok){
         throw new Error('ERROR: response not ok.')
       } return response.json().then(myJson => {
-          // create db and put stuff in
+
+          console.log("Db created. Now put stuff in.");
           dbPromise.then(db => {
             var tx = db.transaction('restaurants', 'readwrite');
             var store = tx.objectStore('restaurants');
             myJson.forEach(element => {
               store.put(element);
             });
-            console.log("ObjectStore: elements added");
+            console.log("Put stuff in Db. End tx.");
             return tx.complete;
+            callback(null, restaurants);
           }).then(function() {
-          // close dbPromise
-          console.log('myJson is returned');
+          console.log('RESPONSE: myJson = response');
           });
       }).catch(error => {
         console.log('Problem with: \n', error);
+        callback(error, null);
+
       });
-    // } //end else
-    console.log("out of all the stuff");
+      console.log("Fetch DBHelper is done.");
   })
-  console.log("is it here yet?");
+  console.log("Is it here yet?");
 }
 
-
-
-  /**
-   * Fetch a restaurant by its ID.
-   1
-   */
+  /** 1 Fetch a restaurant by its ID. */
   static fetchRestaurantById(id, callback) {
     // // fetch all restaurants with proper error handling.
     DBHelper.fetchRestaurants((error, restaurants) => {
@@ -87,15 +75,9 @@ class DBHelper {
         }
       }
     });
-
   }
 
-
-
-  /**
-   * Fetch restaurants by a cuisine type with proper error handling.
-   2
-   */
+  /** 2 Fetch restaurants by a cuisine type with proper error handling. */
   static fetchRestaurantByCuisine(cuisine, callback) {
     // Fetch all restaurants  with proper error handling
     DBHelper.fetchRestaurants((error, restaurants) => {
@@ -109,10 +91,7 @@ class DBHelper {
     });
   }
 
-  /**
-   * Fetch restaurants by a neighborhood with proper error handling.
-   3
-   */
+  /** 3 Fetch restaurants by a neighborhood with proper error handling. */
   static fetchRestaurantByNeighborhood(neighborhood, callback) {
     // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
@@ -126,10 +105,7 @@ class DBHelper {
     });
   }
 
-  /**
-   * Fetch restaurants by a cuisine and a neighborhood with proper error handling.
-   4
-  //  */
+  /* 4 Fetch restaurants by a cuisine and a neighborhood with proper error handling. */
   static fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, callback) {
     // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
@@ -148,10 +124,7 @@ class DBHelper {
     });
   }
 
-  /**
-   * Fetch all neighborhoods with proper error handling.
-   5
-   */
+  /* 5 Fetch all neighborhoods with proper error handling. */
   static fetchNeighborhoods(callback) {
     // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
@@ -167,10 +140,7 @@ class DBHelper {
     });
   }
 
-  /**
-   * Fetch all cuisines with proper error handling.
-   6
-   */
+  /*  6 Fetch all cuisines with proper error handling. */
   static fetchCuisines(callback) {
     // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
@@ -186,23 +156,17 @@ class DBHelper {
     });
   }
 
-  /**
-   * Restaurant page URL.
-   */
+  /** Restaurant page URL.  */
   static urlForRestaurant(restaurant) {
     return (`./restaurant.html?id=${restaurant.id}`);
   }
-//
-//   /**
-//    * Restaurant image URL.
-//    */
+
+  /**  * Restaurant image URL. */
   static imageUrlForRestaurant(restaurant) {
     return (`/img/${restaurant.photograph}`);
   }
-//   //
-//   // /**
-//   //  * Map marker for a restaurant.
-//   //  */
+
+  /** Map marker for a restaurant. */
    static mapMarkerForRestaurant(restaurant, map) {
     // https://leafletjs.com/reference-1.3.0.html#marker
     const marker = new L.marker([restaurant.latlng.lat, restaurant.latlng.lng],
