@@ -36,12 +36,11 @@ class DBHelper {
             for (var id in myJson.value){
               myJson.get(id);
             }
-            callback(null, restaurants);
+            callback(null, myJson);
+            return tx.complete;
           }).then(function() {
           console.log('RESPONSE: myJson = response');
-          document.getElementById('id');
-          return tx.complete;
-
+          // document.getElementById('id');
         });
       }).catch(error => {
         console.log('Problem with: \n', error);
@@ -156,7 +155,7 @@ class DBHelper {
 
   /**  * Restaurant image URL. */
   static imageUrlForRestaurant(restaurant) {
-    return (`/img/${restaurant.photograph}`);
+    return (`/img/${restaurant.photograph}.jpg`);
   }
 
   /** Map marker for a restaurant. */
@@ -170,14 +169,14 @@ class DBHelper {
       marker.addTo(newMap);
     return marker;
   }
- static mapMarkerForRestaurant(restaurant, map) {
-    const marker = new google.maps.Marker({
-      position: restaurant.latlng,
-      title: restaurant.name,
-      url: DBHelper.urlForRestaurant(restaurant),
-      map: map,
-      animation: google.maps.Animation.DROP}
-    );
-    return marker;
-  }
+ // static mapMarkerForRestaurant(restaurant, map) {
+ //    const marker = new google.maps.Marker({
+ //      position: restaurant.latlng,
+ //      title: restaurant.name,
+ //      url: DBHelper.urlForRestaurant(restaurant),
+ //      map: map,
+ //      animation: google.maps.Animation.DROP}
+ //    );
+ //    return marker;
+ //  }
 }
