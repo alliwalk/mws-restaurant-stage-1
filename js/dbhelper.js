@@ -18,20 +18,6 @@ class DBHelper {
     }
   /* Fetch all restaurants. */
   static fetchRestaurants(callback) {
-   // dbPromise.then(db => {
-   //    var tx = db.transaction('restaurants');
-   //    var store = tx.objectStore('restaurants');
-   //      myJson.forEach(element =>{
-    //      store.get(element);
-        // });
-   //
-   //    console.log("ObjectStore: getting all the stuff");
-   //      return stuffs;
-   //
-   //    }).then(items => {
-   //
-   //        console.log("Items by name: ", items);
-   //    });
 
   /** myJson = response **/
     fetch(DBHelper.DATABASE_URL).then(response => {
@@ -47,14 +33,15 @@ class DBHelper {
               store.put(element);
             });
             console.log("Put stuff in Db. End tx.");
-            myJson.forEach(id =>{
-              // debugger;
-             store.get(id);
-            });
+            for (var id in myJson.value){
+              myJson.get(id);
+            }
             callback(null, restaurants);
-            return tx.complete;
           }).then(function() {
           console.log('RESPONSE: myJson = response');
+          document.getElementById('id');
+          return tx.complete;
+
         });
       }).catch(error => {
         console.log('Problem with: \n', error);
