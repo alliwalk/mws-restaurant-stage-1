@@ -1,7 +1,7 @@
 
 /* Common database helper functions. */
 
- var dbPromise = idb.open('restaurant-idb', 1, upgradeDb => {
+ const dbPromise = idb.open('restaurant-idb', 1, upgradeDb => {
    if (!upgradeDb.objectStoreNames.contains('restaurants')) {
       const foodOs = upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
         foodOs.createIndex('rest_name', 'name', {unique: true});
@@ -28,13 +28,13 @@ class DBHelper {
 
           console.log("Db created. Now put stuff in.");
           dbPromise.then(db => {
-            var tx = db.transaction('restaurants', 'readwrite');
-            var store = tx.objectStore('restaurants');
+            let tx = db.transaction('restaurants', 'readwrite');
+            let store = tx.objectStore('restaurants');
             myJson.forEach(element => {
               store.put(element);
             });
             console.log("Put stuff in Db.");
-            for (var id in myJson.value){
+            for (let id in myJson.value){
               myJson.get(id);
             }
 
