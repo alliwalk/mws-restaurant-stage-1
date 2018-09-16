@@ -36,12 +36,19 @@ class DBHelper {
             for (var id in myJson.value){
               myJson.get(id);
             }
+
+            /*
+            Restaurants defined as 'myJson'
+            */
             callback(null, myJson);
             return tx.complete;
             console.log("End tx.");
-          }).then(function() {
-          console.log('RESPONSE: myJson = response');
-          // document.getElementById('id');
+          /*
+            This .then comes from documentation, but it's not really necessary.
+            }).then(function()
+              {console.log('RESPONSE: myJson = response');
+            });
+          */
         });
       }).catch(error => {
         console.log('Problem with: \n', error);
