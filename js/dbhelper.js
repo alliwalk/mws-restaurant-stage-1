@@ -1,3 +1,4 @@
+
 /* Common database helper functions. */
 
  var dbPromise = idb.open('restaurant-idb', 1, upgradeDb => {
