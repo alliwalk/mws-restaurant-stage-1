@@ -88,7 +88,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   address.innerHTML = restaurant.address;
 
   const image = document.getElementById('restaurant-img');
-  image.className = 'restaurant-img'
+  image.className = 'restaurant-img';
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
   image.alt = "Image for " + restaurant.name;
 
@@ -102,6 +102,8 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   // fill reviews
   fillReviewsHTML();
 }
+
+
 
 /**
  * Create restaurant operating hours HTML table and add it to the webpage.
@@ -123,6 +125,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
   }
 }
 
+
 /**
  * Create all reviews HTML and add them to the webpage.
  */
@@ -131,6 +134,38 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
+
+  const reviewTitle = document.createElement('h3');
+  reviewTitle.innerHTML = 'Leave a Review';
+  container.appendChild(reviewTitle);
+
+  const reviewLabel = document.createElement('label');
+  reviewLabel.addClass = 'label';
+  reviewLabel.innerHTML = 'Name your Review';
+  container.appendChild(reviewLabel);
+
+  const reviewInput = document.createElement('input');
+  reviewInput.addClass = 'review-form';
+  reviewInput.innerHTML = 'review topic';
+  container.appendChild(reviewInput);
+
+  const reviewSubLabel = document.createElement('label');
+  reviewSubLabel.addClass = 'label';
+  reviewSubLabel.innerHTML = 'Leave your review';
+  container.appendChild(reviewSubLabel);
+
+  const reviewSubInput = document.createElement('input');
+  reviewSubInput.addClass = 'review-form';
+  reviewSubInput.innerHTML = 'test';
+  container.appendChild(reviewSubInput);
+
+  const submit = document.createElement('a');
+  submit.className = 'button'
+  submit.innerHTML = 'Submit Review';
+  // more.href = DBHelper.urlForRestaurant(restaurant);
+  container.append(submit)
+
+
 
   if (!reviews) {
     const noReviews = document.createElement('p');
