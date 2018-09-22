@@ -4,9 +4,9 @@
  const dbPromise = idb.open('restaurant-idb', 1, upgradeDb => {
    if (!upgradeDb.objectStoreNames.contains('restaurants')) {
       const foodOs = upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
-        foodOs.createIndex('rest_name', 'name', {unique: true});
-        foodOs.createIndex('boro_name', 'neighborhood', {unique: false});
-        foodOs.createIndex('cuis_name', 'cuisine_type', {unique: false});
+        // foodOs.createIndex('favorite', 'name', {unique: true});
+        // foodOs.createIndex('boro_name', 'neighborhood', {unique: false});
+        // foodOs.createIndex('cuis_name', 'cuisine_type', {unique: false});
       }
    console.log("ObjectStore: Created restaurants");
    });
@@ -156,6 +156,29 @@ class DBHelper {
       }
     });
   }
+
+  /* 4 Fetch restaurants by a favorite with proper error handling. */
+  static fetchRestaurantByFavorite(callback) {
+    // Fetch all restaurants
+    DBHelper.fetchRestaurants((error, restaurants) => {
+      if (error) {
+        callback(error, null);
+      } else {
+        let result = restaurants;
+        if (is_favorite != false) { // check if favorite
+          console.log('true');
+          return result;
+        } else {
+          console.log('false');
+          return result;
+        }
+        callback(null, result);
+      }
+    });
+  }
+
+
+
 
   /** Restaurant page URL.  */
   static urlForRestaurant(restaurant) {
