@@ -157,7 +157,7 @@ class DBHelper {
     });
   }
 
-  /* 4 Fetch restaurants by a favorite with proper error handling. */
+  /* 7 Fetch restaurants by a favorite with proper error handling. */
   static fetchRestaurantByFavorite(callback) {
     // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
@@ -166,10 +166,8 @@ class DBHelper {
       } else {
         let result = restaurants;
         if (is_favorite != false) { // check if favorite
-          console.log('true');
           return result;
         } else {
-          console.log('false');
           return result;
         }
         callback(null, result);
