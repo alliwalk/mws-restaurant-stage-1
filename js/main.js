@@ -167,7 +167,15 @@ createRestaurantHTML = (restaurant) => {
   name.innerHTML = restaurant.name;
   li.append(name);
 
+
   const favorite = document.createElement('a');
+    // if (restaurant.is_favorite = 'undefined'){
+    //   favorite.innerHTML = 'Save as favorite';
+    // } else if (restaurant.is_favorite = 'false'){
+    //   favorite.innerHTML = 'Save as favorite';
+    // } else {
+    //   favorite.innerHTML = 'Unfavorite'
+    // }
   favorite.innerHTML = restaurant.is_favorite;
   li.append(favorite);
 
@@ -201,18 +209,4 @@ addMarkersToMap = (restaurants = self.restaurants) => {
       window.location.href = marker.options.url;
     }
   });
-
-
-  /**
-   * Add favorite flag.
-   */
-  // saveFavoriteAsFavorite = (restaurants = self.restaurants) => {
-  //   restaurants.forEach(restaurant => {
-  //     // Add marker to the map
-  //     let fav = DBHelper.mapMarkerForRestaurant(restaurant, self.newMap);
-  //     marker.on("click", onClick);
-  //     function onClick() {
-  //       window.location.href = marker.options.url;
-  //     }
-  //   });
-  // }
+}
