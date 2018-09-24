@@ -312,13 +312,24 @@ nav h1 a {
 }
 
 /* Full-width input fields -- based on W3 schools https://www.w3schools.com/howto/howto_css_register_form.asp*/
-#reviews-container input{
+#reviews-container label{
   width: 90%;
+  display: inline-block;
+}
+#reviews-container input{
+  width: 80%;
   padding: 15px;
   margin: 5px 0 22px 0;
   display: inline-block;
   border: 1px solid silver;
   background: #f1f1f1;
+	font-size: 14px;
+}
+#reviews-container input.short{
+  max-width: 30%;
+}
+#reviews-container input.rating{
+  max-width: 90px;
 }
 #reviews-container a.button {
   background-color: #c47335;
