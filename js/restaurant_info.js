@@ -141,28 +141,32 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
 
   const reviewLabel = document.createElement('label');
   reviewLabel.addClass = 'label';
-  reviewLabel.innerHTML = 'Name your Review';
+  reviewLabel.innerHTML = 'What is your name?';
   container.appendChild(reviewLabel);
 
-  const reviewInput = document.createElement('input');
-  reviewInput.addClass = 'review-form';
-  reviewInput.innerHTML = 'review topic';
-  container.appendChild(reviewInput);
+  const nameInput = document.createElement('input');
+  nameInput.className = 'short';
+  container.appendChild(nameInput);
 
-  const reviewSubLabel = document.createElement('label');
-  reviewSubLabel.addClass = 'label';
-  reviewSubLabel.innerHTML = 'Leave your review';
-  container.appendChild(reviewSubLabel);
+  const ratingLabel = document.createElement('label');
+  ratingLabel.innerHTML = 'What is your rating? (1-5)';
+  container.appendChild(ratingLabel);
 
-  const reviewSubInput = document.createElement('input');
-  reviewSubInput.addClass = 'review-form';
-  reviewSubInput.innerHTML = 'test';
-  container.appendChild(reviewSubInput);
+  const ratingInput = document.createElement('input');
+  ratingInput.className = 'rating';
+  container.appendChild(ratingInput);
+
+  const commentsLabel = document.createElement('label');
+  commentsLabel.innerHTML = 'Leave your review';
+  container.appendChild(commentsLabel);
+
+  const commentInput = document.createElement('input');
+  container.appendChild(commentInput);
 
   const submit = document.createElement('a');
   submit.className = 'button'
   submit.innerHTML = 'Submit Review';
-  // more.href = DBHelper.urlForRestaurant(restaurant);
+  // submit.href = DBHelper.urlForRestaurant(restaurant);
   container.append(submit)
 
 
