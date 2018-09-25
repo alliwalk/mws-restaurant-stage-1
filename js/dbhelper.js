@@ -2,14 +2,22 @@
 /* Common database helper functions. */
 
  const dbPromise = idb.open('restaurant-idb', 1, upgradeDb => {
-   if (!upgradeDb.objectStoreNames.contains('restaurants')) {
-      const foodOs = upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
-        // foodOs.createIndex('favorite', 'name', {unique: true});
-        // foodOs.createIndex('boro_name', 'neighborhood', {unique: false});
-        // foodOs.createIndex('cuis_name', 'cuisine_type', {unique: false});
+  if (!upgradeDb.objectStoreNames.contains('restaurants')) {
+      upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
+        // foodList.createIndex('reviews', 'review', {unique: false});
+        // foodList.createIndex('favorites', 'is_favorite', {unique: false});
       }
-   console.log("ObjectStore: Created restaurants");
+    console.log("ObjectStore: Created restaurants");
+  if (!upgradeDb.objectStoreNames.contains('review')) {
+          upgradeDb.createObjectStore('pending', {keyPath: 'name', autoIncrement: true});
+      }
+      console.log("ObjectStore: Created Queue for reviews");
+  if (!upgradeDb.objectStoreNames.contains('reviews')) {
+      upgradeDb.createObjectStore('reviews', {keyPath: 'id', autoIncrement: true});
+      }
+      console.log("ObjectStore: Created reviews");
    });
+
 
 class DBHelper {
   /* Database URL. Change this to restaurants.json file location on your server. */
