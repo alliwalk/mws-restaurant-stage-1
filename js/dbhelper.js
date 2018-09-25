@@ -4,8 +4,6 @@
  const dbPromise = idb.open('restaurant-idb', 1, upgradeDb => {
   if (!upgradeDb.objectStoreNames.contains('restaurants')) {
       upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
-        // foodList.createIndex('reviews', 'review', {unique: false});
-        // foodList.createIndex('favorites', 'is_favorite', {unique: false});
       }
     console.log("ObjectStore: Created restaurants");
   if (!upgradeDb.objectStoreNames.contains('review')) {
@@ -21,20 +19,23 @@
 
 class DBHelper {
   /* Database URL. Change this to restaurants.json file location on your server. */
-   static get DATABASE_URL() {
-     const port = 1337; //Change this to your server port
-     return `http://localhost:${port}/restaurants/`;
-    }
+ static get DATABASE_URL() {
+   const port = 1337; //Change this to your server port
+   return `http://localhost:${port}/restaurants/`;
+  }
+  static get DATABASE_URL_REVIEW() {
+    const port = 1337; //Change this to your server port
+    return `http://localhost:${port}/reviews/`;
+   }
+
   /* Fetch all restaurants. */
   static fetchRestaurants(callback) {
-
   /** myJson = response **/
     fetch(DBHelper.DATABASE_URL).then(response => {
       if(!response.ok){
         throw new Error('ERROR: response not ok.')
       } return response.json().then(myJson => {
-
-          console.log("Db created. Now put stuff in.");
+          console.log("Getting myJson");
           dbPromise.then(db => {
             let tx = db.transaction('restaurants', 'readwrite');
             let store = tx.objectStore('restaurants');
@@ -45,26 +46,14 @@ class DBHelper {
             for (let id in myJson.value){
               myJson.get(id);
             }
-
-            /*
-            Restaurants defined as 'myJson'
-            */
             callback(null, myJson);
             return tx.complete;
             console.log("End tx.");
-          /*
-            This .then comes from documentation, but it's not really necessary.
-            }).then(function()
-              {console.log('RESPONSE: myJson = response');
-            });
-          */
         });
       }).catch(error => {
         console.log('Problem with: \n', error);
         callback(error, null);
-
       });
-      console.log("Fetch DBHelper is done.");
   })
   console.log("Is it here yet?");
 }
