@@ -233,9 +233,16 @@ nav h1 a {
 	font-weight: 400;
 }
 
+#restaurants-list .blue{
+	color: blue;
+}
+#restaurants-list .red{
+	color: red;
+}
+
 #restaurants-list li a.button:hover {
   background-color: #f18200;
-  border-bottom: 0px solid #eee;
+  border-bottom: 3px solid #eee;
 }
 
 /* ====================== Restaurant Details ====================== */
