@@ -1,62 +1,78 @@
 
 /* Common database helper functions. */
 
+  // const dbPromise = idb.open('restaurant-db', 2, upgradeDb => {
+  //   switch (upgradeDb.oldVersion){
+  //     case 0:
+  //       upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
+  //     case 1:
+  //       var reviewStore = upgradeDb.createObjectStore('reviews', {keyPath: 'id', autoIncrement: true});
+  //         reviewStore.createIndex('restaurant', 'restaurant_id');
+  //   }
+  // });
+
+
  const dbPromise = idb.open('restaurant-idb', 1, upgradeDb => {
   if (!upgradeDb.objectStoreNames.contains('restaurants')) {
       upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
       }
     console.log("ObjectStore: Created restaurants");
-  if (!upgradeDb.objectStoreNames.contains('review')) {
-          upgradeDb.createObjectStore('pending', {keyPath: 'name', autoIncrement: true});
-      }
-      console.log("ObjectStore: Created Queue for reviews");
-  if (!upgradeDb.objectStoreNames.contains('reviews')) {
-      upgradeDb.createObjectStore('reviews', {keyPath: 'id', autoIncrement: true});
-      }
-      console.log("ObjectStore: Created reviews");
+  // if (!upgradeDb.objectStoreNames.contains('review')) {
+  //         upgradeDb.createObjectStore('pending', {keyPath: 'name', autoIncrement: true});
+  //     }
+  //     console.log("ObjectStore: Created Queue for reviews");
+  // if (!upgradeDb.objectStoreNames.contains('reviews')) {
+  //     upgradeDb.createObjectStore('reviews', {keyPath: 'id', autoIncrement: true});
+  //     }
+  //     console.log("ObjectStore: Created reviews");
    });
 
 
-class DBHelper {
-  /* Database URL. Change this to restaurants.json file location on your server. */
- static get DATABASE_URL() {
-   const port = 1337; //Change this to your server port
-   return `http://localhost:${port}/restaurants/`;
-  }
-  static get DATABASE_URL_REVIEW() {
-    const port = 1337; //Change this to your server port
-    return `http://localhost:${port}/reviews/`;
-   }
+ class DBHelper {
+   /* Database URL. Change this to restaurants.json file location on your server. */
+    static get DATABASE_URL() {
+      const port = 1337; //Change this to your server port
+      return `http://localhost:${port}/restaurants/`;
+     }
+   /* Fetch all restaurants. */
+   static fetchRestaurants(callback) {
 
-  /* Fetch all restaurants. */
-  static fetchRestaurants(callback) {
-  /** myJson = response **/
-    fetch(DBHelper.DATABASE_URL).then(response => {
-      if(!response.ok){
-        throw new Error('ERROR: response not ok.')
-      } return response.json().then(myJson => {
-          console.log("Getting myJson");
-          dbPromise.then(db => {
-            let tx = db.transaction('restaurants', 'readwrite');
-            let store = tx.objectStore('restaurants');
-            myJson.forEach(element => {
-              store.put(element);
-            });
-            console.log("Put stuff in Db.");
-            for (let id in myJson.value){
-              myJson.get(id);
-            }
-            callback(null, myJson);
-            return tx.complete;
-            console.log("End tx.");
-        });
-      }).catch(error => {
-        console.log('Problem with: \n', error);
-        callback(error, null);
-      });
-  })
-  console.log("Is it here yet?");
-}
+   /** myJson = response **/
+     fetch(DBHelper.DATABASE_URL).then(response => {
+       if(!response.ok){
+         throw new Error('ERROR: response not ok.')
+       } return response.json().then(myJson => {
+           console.log("Db created. Now put stuff in.");
+           dbPromise.then(db => {
+             let tx = db.transaction('restaurants', 'readwrite');
+             let store = tx.objectStore('restaurants');
+             myJson.forEach(element => {
+               store.put(element);
+             });
+             console.log("Put stuff in Db.");
+             for (let id in myJson.value){
+               myJson.get(id);
+             }
+             /* Restaurants defined as 'myJson' */
+             callback(null, myJson);
+             return tx.complete;
+             console.log("End tx.");
+           /*
+             This .then comes from documentation, but it's not really necessary.
+             }).then(function()
+               {console.log('RESPONSE: myJson = response');
+             });
+           */
+         });
+       }).catch(error => {
+         console.log('Problem with: \n', error);
+         callback(error, null);
+
+       });
+       console.log("Fetch DBHelper is done.");
+   })
+   console.log("Is it here yet?");
+ }
 
   /** 1 Fetch a restaurant by its ID. */
   static fetchRestaurantById(id, callback) {
@@ -154,26 +170,6 @@ class DBHelper {
     });
   }
 
-  /* 7 Fetch restaurants by a favorite with proper error handling. */
-  static fetchRestaurantByFavorite(callback) {
-    // Fetch all restaurants
-    DBHelper.fetchRestaurants((error, restaurants) => {
-      if (error) {
-        callback(error, null);
-      } else {
-        let result = restaurants;
-        if (is_favorite != false) { // check if favorite
-          return result;
-        } else {
-          return result;
-        }
-        callback(null, result);
-      }
-    });
-  }
-
-
-
 
   /** Restaurant page URL.  */
   static urlForRestaurant(restaurant) {
@@ -196,4 +192,70 @@ class DBHelper {
       marker.addTo(newMap);
     return marker;
   }
+
+
+
+  /* Use Fetch to update restaurant favorite. https://www.youtube.com/watch?v=XbCwxeCqxw4 */
+  static updateFavoriteStatus(restaurantId, isFavorite) {
+    console.log('changing status to: ', isFavorite);
+
+    fetch(`http://localhost:1337/restaurants/${restaurantId}/?is_favorite=${isFavorite}`, {method: 'PUT'}).then(function(response) {
+      console.log('Status: ', response.status );
+        if(!response.ok){
+          throw new Error('ERROR: response not ok.')
+        }
+      response.json().then(function(getFavData){
+        console.log('FETCH Result', getFavData);
+        dbPromise.then(function(db) {
+          let tx = db.transaction('restaurants', 'readwrite');
+          let store = tx.objectStore('restaurants');
+          store.get(restaurantId).then(restaurant => {
+            restaurant.is_favorite = isFavorite;
+            store.put(restaurant);
+          });
+        })
+        .catch(function(error){
+          console.log('FETCH Parsing Error', error);
+        });
+      });
+    });
+  }
 }
+
+
+//   fetch(DBHelper.DATABASE_URL).then(response => {
+//     if(!response.ok){
+//       throw new Error('ERROR: response not ok.')
+//     } return response.json().then(myJson => {
+//
+//         console.log("Db created. Now put stuff in.");
+//         dbPromise.then(db => {
+//           let tx = db.transaction('restaurants', 'readwrite');
+//           let store = tx.objectStore('restaurants');
+//           myJson.forEach(element => {
+//             store.put(element);
+//           });
+//           console.log("Put stuff in Db.");
+//           for (let id in myJson.value){
+//             myJson.get(id);
+//           }
+//           /* Restaurants defined as 'myJson' */
+//           callback(null, myJson);
+//           return tx.complete;
+//           console.log("End tx.");
+//         /*
+//           This .then comes from documentation, but it's not really necessary.
+//           }).then(function()
+//             {console.log('RESPONSE: myJson = response');
+//           });
+//         */
+//       });
+//     }).catch(error => {
+//       console.log('Problem with: \n', error);
+//       callback(error, null);
+//
+//     });
+//     console.log("Fetch DBHelper is done.");
+// })
+// console.log("Is it here yet?");
+// }
