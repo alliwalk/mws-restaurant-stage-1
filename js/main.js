@@ -167,17 +167,19 @@ createRestaurantHTML = (restaurant) => {
   name.innerHTML = restaurant.name;
   li.append(name);
 
-
-  const favorite = document.createElement('a');
-    // if (restaurant.is_favorite = 'undefined'){
-    //   favorite.innerHTML = 'Save as favorite';
-    // } else if (restaurant.is_favorite = 'false'){
-    //   favorite.innerHTML = 'Save as favorite';
-    // } else {
-    //   favorite.innerHTML = 'Unfavorite'
-    // }
-  favorite.innerHTML = restaurant.is_favorite;
+  // Found via: https://www.youtube.com/watch?v=XbCwxeCqxw4
+  const favorite = document.createElement('button');
+  favorite.innerHTML = '❤';
+  favorite.classList.add('fav_yes');
+  favorite.onclick = function(){
+    const isFav = !restaurant.is_favorite; //false
+    DBHelper.updateFavoriteStatus(restaurant.id, isFav);
+    restaurant.is_favorite = !restaurant.is_favorite
+    changeFavit(favorite, restaurant.is_favorite)
+  };
+  changeFavit(favorite, restaurant.is_favorite)
   li.append(favorite);
+
 
   const neighborhood = document.createElement('p');
   neighborhood.innerHTML = restaurant.neighborhood;
@@ -196,6 +198,21 @@ createRestaurantHTML = (restaurant) => {
 
   return li
 }
+
+// Found via: https://www.youtube.com/watch?v=XbCwxeCqxw4
+changeFavit = (btn, fav) => {
+  if(!fav){
+    btn.classList.remove('fav_yes');
+    btn.classList.add('fav_no')
+    btn.setAttribute('aria-label', 'Mark as favorite');
+  } else {
+    console.log("Favit! Red");
+    btn.classList.remove('fav_no');
+    btn.classList.add('fav_yes');
+    btn.setAttribute('aria-label', 'Remove favorite');
+  }
+}
+
 
 /**
  * Add markers for current restaurants to the map.
