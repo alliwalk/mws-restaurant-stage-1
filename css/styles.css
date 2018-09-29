@@ -232,17 +232,20 @@ nav h1 a {
 	width: 100%;
 	font-weight: 400;
 }
-
-#restaurants-list .blue{
-	color: blue;
-}
-#restaurants-list .red{
-	color: red;
-}
-
 #restaurants-list li a.button:hover {
   background-color: #f18200;
   border-bottom: 3px solid #eee;
+}
+
+/* https://codepen.io/waqasy/pen/ojaRzx */
+#restaurants-list button {
+	font-size: 18px;
+}
+#restaurants-list .fav_yes {
+	color: red;
+}
+#restaurants-list .fav_no {
+	color: grey;
 }
 
 /* ====================== Restaurant Details ====================== */
