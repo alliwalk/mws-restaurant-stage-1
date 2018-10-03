@@ -146,6 +146,8 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
 
   const nameInput = document.createElement('input');
   nameInput.className = 'short';
+  nameInput.setAttribute('aria-label', 'Name form');
+  nameInput.setAttribute('placeholder', 'Enter name');
   container.appendChild(nameInput);
 
   const ratingLabel = document.createElement('label');
@@ -154,6 +156,11 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
 
   const ratingInput = document.createElement('input');
   ratingInput.className = 'rating';
+  ratingInput.setAttribute('aria-label', 'Rating form');
+  ratingInput.setAttribute('type', 'number');
+  ratingInput.setAttribute('min', '1');
+  ratingInput.setAttribute('max', '5');
+  ratingInput.setAttribute('placeholder', '0');
   container.appendChild(ratingInput);
 
   const commentsLabel = document.createElement('label');
@@ -162,6 +169,8 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
 
   const commentInput = document.createElement('input');
   container.appendChild(commentInput);
+  commentInput.setAttribute('aria-label', 'Review form');
+  commentInput.setAttribute('placeholder', 'Add review');
 
   const submit = document.createElement('a');
   submit.className = 'button'
