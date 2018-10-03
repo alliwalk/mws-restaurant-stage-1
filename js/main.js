@@ -202,6 +202,7 @@ createRestaurantHTML = (restaurant) => {
 // Found via: https://www.youtube.com/watch?v=XbCwxeCqxw4
 changeFavit = (btn, fav) => {
   if(!fav){
+    console.log("Not a favit! Grey");
     btn.classList.remove('fav_yes');
     btn.classList.add('fav_no')
     btn.setAttribute('aria-label', 'Mark as favorite');
