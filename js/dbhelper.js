@@ -199,7 +199,7 @@
   static updateFavoriteStatus(restaurantId, isFavorite) {
     console.log('changing status to: ', isFavorite);
 
-    fetch(`http://localhost:1337/restaurants/${restaurantId}/?is_favorite=${isFavorite}`, {method: 'PUT'}).then(function(response) {
+    fetch(`http://localhost:1337/restaurants/${restauranotId}/?is_favorite=${isFavorite}`, {method: 'PUT'}).then(function(response) {
       console.log('Status: ', response.status );
         if(!response.ok){
           throw new Error('ERROR: response not ok.')
