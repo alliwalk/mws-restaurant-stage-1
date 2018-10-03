@@ -1,31 +1,31 @@
 
 /* Common database helper functions. */
 
-  // const dbPromise = idb.open('restaurant-db', 2, upgradeDb => {
-  //   switch (upgradeDb.oldVersion){
-  //     case 0:
-  //       upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
-  //     case 1:
-  //       var reviewStore = upgradeDb.createObjectStore('reviews', {keyPath: 'id', autoIncrement: true});
-  //         reviewStore.createIndex('restaurant', 'restaurant_id');
-  //   }
-  // });
+  const dbPromise = idb.open('restaurant-db', 1, upgradeDb => {
+    switch (upgradeDb.oldVersion){
+      case 0:
+        upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
+      case 1:
+        var reviewStore = upgradeDb.createObjectStore('reviews', {keyPath: 'id', autoIncrement: true});
+          // reviewStore.createIndex('restaurant', 'restaurant_id');
+    }
+  });
 
 
- const dbPromise = idb.open('restaurant-idb', 1, upgradeDb => {
-  if (!upgradeDb.objectStoreNames.contains('restaurants')) {
-      upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
-      }
-    console.log("ObjectStore: Created restaurants");
-  // if (!upgradeDb.objectStoreNames.contains('review')) {
-  //         upgradeDb.createObjectStore('pending', {keyPath: 'name', autoIncrement: true});
-  //     }
-  //     console.log("ObjectStore: Created Queue for reviews");
-  // if (!upgradeDb.objectStoreNames.contains('reviews')) {
-  //     upgradeDb.createObjectStore('reviews', {keyPath: 'id', autoIncrement: true});
-  //     }
-  //     console.log("ObjectStore: Created reviews");
-   });
+ // const dbPromise = idb.open('restaurant-idb', 1, upgradeDb => {
+ //  if (!upgradeDb.objectStoreNames.contains('restaurants')) {
+ //      upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
+ //      }
+ //    console.log("ObjectStore: Created restaurants");
+ //  // if (!upgradeDb.objectStoreNames.contains('review')) {
+ //  //         upgradeDb.createObjectStore('pending', {keyPath: 'name', autoIncrement: true});
+ //  //     }
+ //  //     console.log("ObjectStore: Created Queue for reviews");
+ //  // if (!upgradeDb.objectStoreNames.contains('reviews')) {
+ //  //     upgradeDb.createObjectStore('reviews', {keyPath: 'id', autoIncrement: true});
+ //  //     }
+ //  //     console.log("ObjectStore: Created reviews");
+ //   });
 
 
  class DBHelper {
@@ -170,7 +170,6 @@
     });
   }
 
-
   /** Restaurant page URL.  */
   static urlForRestaurant(restaurant) {
     return (`./restaurant.html?id=${restaurant.id}`);
@@ -199,7 +198,7 @@
   static updateFavoriteStatus(restaurantId, isFavorite) {
     console.log('changing status to: ', isFavorite);
 
-    fetch(`http://localhost:1337/restaurants/${restauranotId}/?is_favorite=${isFavorite}`, {method: 'PUT'}).then(function(response) {
+    fetch(`http://localhost:1337/restaurants/${restaurantId}/?is_favorite=${isFavorite}`, {method: 'PUT'}).then(function(response) {
       console.log('Status: ', response.status );
         if(!response.ok){
           throw new Error('ERROR: response not ok.')
@@ -220,4 +219,32 @@
       });
     });
   }
+
+
+
+  // static getReviewsById(id) {
+  //   console.log('changing status to: ', isFavorite);
+  //
+  //   fetch(DBHelper.DATABASE_URL)
+  //   .then(response => {
+  //     if(!response.ok){
+  //       throw new Error('ERROR: response not ok.')
+  //     } return response.json().then(function(reviews){
+  //       console.log('FETCH Result', reviews);
+  //       dbPromise.then(function(db) {
+  //         let tx = db.transaction('reviews', 'readwrite');
+  //         let store = tx.objectStore('reviews');
+  //         store.get(restaurantId).then(restaurant => {
+  //           restaurant.is_favorite = isFavorite;
+  //           store.put(restaurant);
+  //         });
+  //       })
+  //       .catch(function(error){
+  //         console.log('FETCH Parsing Error', error);
+  //       });
+  //     });
+  //   });
+  // }
+
+/** end of Class DBHelper **/
 }
