@@ -240,6 +240,7 @@ nav h1 a {
 /* https://codepen.io/waqasy/pen/ojaRzx */
 #restaurants-list button {
 	font-size: 18px;
+	color: grey;
 }
 #restaurants-list .fav_yes {
 	color: red;
@@ -353,18 +354,21 @@ nav h1 a {
   text-decoration: none;
 	width: 60%;
 	font-weight: 400;
+	margin-bottom: 25px;
 }
 
 #reviews-container a.button:hover {
   background-color: #f18200;
   border-bottom: 3px solid #eee;
 	cursor: pointer;
+
 }
 
 #reviews-list {
   margin: 0;
   padding: 0;
 }
+
 #reviews-list li {
   background-color: #fff;
   border: 2px solid #f3f3f3;
