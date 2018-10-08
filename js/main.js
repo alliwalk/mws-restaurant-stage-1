@@ -177,7 +177,7 @@ createRestaurantHTML = (restaurant) => {
     restaurant.is_favorite = !restaurant.is_favorite
     changeFavit(favorite, restaurant.is_favorite)
   };
-  changeFavit(favorite, restaurant.is_favorite)
+  // changeFavit(favorite, restaurant.is_favorite)
   li.append(favorite);
 
 
@@ -196,23 +196,39 @@ createRestaurantHTML = (restaurant) => {
   more.href = DBHelper.urlForRestaurant(restaurant);
   li.append(more)
 
-  return li
+  return li;
 }
 
 // Found via: https://www.youtube.com/watch?v=XbCwxeCqxw4
+// changeFavit = (btn, fav) => {
+//   if(!fav){
+//     console.log("Not a favit! Grey");
+//     btn.classList.remove('fav_yes');
+//     btn.classList.add('fav_no')
+//     btn.setAttribute('aria-label', 'Mark as favorite');
+//   } else {
+//     console.log("Favit! Red");
+//     btn.classList.remove('fav_no');
+//     btn.classList.add('fav_yes');
+//     btn.setAttribute('aria-label', 'Remove favorite');
+//   }
+// }
+
+// Based on...https://www.youtube.com/watch?v=XbCwxeCqxw4
 changeFavit = (btn, fav) => {
   if(!fav){
-    console.log("Not a favit! Grey");
-    btn.classList.remove('fav_yes');
-    btn.classList.add('fav_no')
-    btn.setAttribute('aria-label', 'Mark as favorite');
+    console.log("Not a favit! Look now it's grey.");
+    btn.classList.toggle('fav_yes');
+    btn.setAttribute('aria-label', 'Toggle as favorite');
+      console.log("------ Not a favorite");
   } else {
-    console.log("Favit! Red");
-    btn.classList.remove('fav_no');
-    btn.classList.add('fav_yes');
+    console.log("Found a Favit! Look now it's red.");
+    btn.classList.toggle('fav_yes');
     btn.setAttribute('aria-label', 'Remove favorite');
+    console.log("****** Toggled as favorite");
   }
 }
+
 
 
 /**
