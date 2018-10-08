@@ -99,10 +99,19 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
-  // fill reviews
-  fillReviewsHTML();
-}
 
+  // fill reviews
+  console.log('populate reviews');
+
+  DBHelper.getReviews(restaurant.id, (error, reviews) => {
+    if (error) {
+      callback (error, null)
+    } else {
+      fillReviewsHTML(reviews);
+    }
+  })
+
+}
 
 
 /**
@@ -134,52 +143,6 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
-
-  const reviewTitle = document.createElement('h3');
-  reviewTitle.innerHTML = 'Leave a Review';
-  container.appendChild(reviewTitle);
-
-  const reviewLabel = document.createElement('label');
-  reviewLabel.addClass = 'label';
-  reviewLabel.innerHTML = 'What is your name?';
-  container.appendChild(reviewLabel);
-
-  const nameInput = document.createElement('input');
-  nameInput.className = 'short';
-  nameInput.setAttribute('aria-label', 'Name form');
-  nameInput.setAttribute('placeholder', 'Enter name');
-  container.appendChild(nameInput);
-
-  const ratingLabel = document.createElement('label');
-  ratingLabel.innerHTML = 'What is your rating? (1-5)';
-  container.appendChild(ratingLabel);
-
-  const ratingInput = document.createElement('input');
-  ratingInput.className = 'rating';
-  ratingInput.setAttribute('aria-label', 'Rating form');
-  ratingInput.setAttribute('type', 'number');
-  ratingInput.setAttribute('min', '1');
-  ratingInput.setAttribute('max', '5');
-  ratingInput.setAttribute('placeholder', '0');
-  container.appendChild(ratingInput);
-
-  const commentsLabel = document.createElement('label');
-  commentsLabel.innerHTML = 'Leave your review';
-  container.appendChild(commentsLabel);
-
-  const commentInput = document.createElement('input');
-  container.appendChild(commentInput);
-  commentInput.setAttribute('aria-label', 'Review form');
-  commentInput.setAttribute('placeholder', 'Add review');
-
-  const submit = document.createElement('a');
-  submit.className = 'button'
-  submit.innerHTML = 'Submit Review';
-  // submit.href = DBHelper.urlForRestaurant(restaurant);
-  container.append(submit)
-
-
-
   if (!reviews) {
     const noReviews = document.createElement('p');
     noReviews.innerHTML = 'No reviews yet!';
@@ -191,7 +154,8 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
     ul.appendChild(createReviewHTML(review));
   });
   container.appendChild(ul);
-}
+  }
+
 
 /**
  * Create review HTML and add it to the webpage.
@@ -216,6 +180,58 @@ createReviewHTML = (review) => {
 
   return li;
 }
+
+
+
+var submitButton = document.getElementById('submit-button');
+submitButton.onclick = addReview;
+
+
+function addReview() {
+  console.log('submit review button pressed');
+  // create variables for each review element
+    var restaurant_id = getParameterByName('id');
+    var name = document.getElementById('reviewer_name').value;
+    var rating = document.getElementById('rating').value;
+    var comments = document.getElementById('comment_text').value;
+    const review = {
+        "restaurant_id": restaurant_id,
+        "name": name,
+        "rating": rating,
+        "comments": comments
+      };
+
+    //console log the values
+    console.log(review);
+
+    debugger;
+    DBHelper.putReview(review);
+}
+
+ /*
+
+ this comes after the form is submitted
+
+ // create variables for each review element
+ function addReviewToPage() {
+   let restaurant_id =
+   reviewer-name
+   let rating
+   comment_text
+
+ }
+ */
+//   //After the form is submitted, get the values from the form
+  // let restaurantId = getParameterByName('id');
+  // let name = document.getElementById('reviewer-name').value;
+  // let rating = document.getElementById('rating').value;
+  // let comments = document.getElementById('comment_text').value;
+
+//   //take the value from the submitted form and put it back onto the page
+//   //take the value from the submitted form and put it into idb
+// }
+
+
 
 /**
  * Add restaurant name to the breadcrumb navigation menu
