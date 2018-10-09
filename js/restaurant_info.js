@@ -190,10 +190,10 @@ submitButton.onclick = addReview;
 function addReview() {
   console.log('submit review button pressed');
   // create variables for each review element
-    var restaurant_id = getParameterByName('id');
-    var name = document.getElementById('reviewer_name').value;
-    var rating = document.getElementById('rating').value;
-    var comments = document.getElementById('comment_text').value;
+    let restaurant_id = getParameterByName('id');
+    let name = document.getElementById('reviewer_name').value;
+    let rating = document.getElementById('rating').value;
+    let comments = document.getElementById('comment_text').value;
     const review = {
         "restaurant_id": restaurant_id,
         "name": name,
