@@ -204,7 +204,7 @@ function addReview() {
     //console log the values
     console.log(review);
 
-    debugger;
+    // debugger;
     DBHelper.putReview(review);
 }
 
