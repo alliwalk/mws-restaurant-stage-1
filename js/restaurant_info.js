@@ -1,6 +1,7 @@
 let restaurant;
 var newMap;
 
+
 /**
  * Initialize map as soon as the page is loaded.
  */
@@ -134,6 +135,63 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
   }
 }
 
+var submitButton = document.getElementById('submit-button');
+submitButton.onclick = addReview;
+
+var idb_request;
+
+function addReview() {
+  console.log('submit review button pressed');
+  // create variables for each review element
+    const id = getParameterByName('id');
+    let restaurant_id = id;
+    let name = review.name;;
+    let date = review.date;
+    let rating = document.getElementById('rating').value;
+    let comments = document.getElementById('comment_text').value;
+    const review = [{
+        restaurant_id: id,
+        name: name,
+        rating: rating,
+        comments: comments
+      }];
+
+      // idb_request.addEventListener("upgradeneeded", function(e){
+      //   var saveReview = this.result.createObjectStore("reviewTemp", { autoIncrement: true });
+      // })
+    //console log the values
+    console.log(review, id);
+
+    // debugger;
+    DBHelper.putReview();
+}
+
+ /*
+
+ this comes after the form is submitted
+
+ // create variables for each review element
+ function addReviewToPage() {
+   let restaurant_id =
+   reviewer-name
+   let rating
+   comment_text
+
+ }
+ */
+//   //After the form is submitted, get the values from the form
+  // let restaurantId = getParameterByName('id');
+  // let name = document.getElementById('reviewer-name').value;
+  // let rating = document.getElementById('rating').value;
+  // let comments = document.getElementById('comment_text').value;
+
+//   //take the value from the submitted form and put it back onto the page
+//   //take the value from the submitted form and put it into idb
+// }
+
+
+
+
 
 /**
  * Create all reviews HTML and add them to the webpage.
@@ -180,56 +238,6 @@ createReviewHTML = (review) => {
 
   return li;
 }
-
-
-
-var submitButton = document.getElementById('submit-button');
-submitButton.onclick = addReview;
-
-
-function addReview() {
-  console.log('submit review button pressed');
-  // create variables for each review element
-    let restaurant_id = getParameterByName('id');
-    let name = document.getElementById('reviewer_name').value;
-    let rating = document.getElementById('rating').value;
-    let comments = document.getElementById('comment_text').value;
-    const review = {
-        "restaurant_id": restaurant_id,
-        "name": name,
-        "rating": rating,
-        "comments": comments
-      };
-
-    //console log the values
-    console.log(review);
-
-    // debugger;
-    DBHelper.putReview(review);
-}
-
- /*
-
- this comes after the form is submitted
-
- // create variables for each review element
- function addReviewToPage() {
-   let restaurant_id =
-   reviewer-name
-   let rating
-   comment_text
-
- }
- */
-//   //After the form is submitted, get the values from the form
-  // let restaurantId = getParameterByName('id');
-  // let name = document.getElementById('reviewer-name').value;
-  // let rating = document.getElementById('rating').value;
-  // let comments = document.getElementById('comment_text').value;
-
-//   //take the value from the submitted form and put it back onto the page
-//   //take the value from the submitted form and put it into idb
-// }
 
 
 
