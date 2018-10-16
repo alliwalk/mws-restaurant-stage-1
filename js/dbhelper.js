@@ -63,58 +63,6 @@
      })
    }
 
-   // /* added for stage 3 - reviews are served separately from restaurants */
-   //     static fetchReviews(id, callback) {
-   //     fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`).then(function(response) {
-   //       return response.json();
-   //     }).then(data => {
-   //       const reviews = data;
-   //       console.log('Reviews', reviews);
-   //       callback(null, reviews);
-   //     })
-   //      .catch(function () {
-   //       console.log("Looks like a problem ...");
-   //       dbPromise.then(db => {
-   //         const tx = db.transaction('reviews','readwrite');
-   //         const reviewsStore = tx.objectStore('reviews');
-   //         return store.getAll();
-   //         }).then(reviews => {
-   //         callback(null, reviews);
-   //         console.log('Reviews', reviews);
-   //      })
-   //     })
-   //   }
-
- static getReviews(id, callback) {
-   console.log("returning rev data");
-    fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`).then(response => {
-     if(!response.ok){
-       throw new Error('ERROR: response not ok.')
-      } return response.json().then(myReviews => {
-         console.log("returning rev data", myReviews);
-         dbPromise.then(db => {
-         let tx = db.transaction('reviews', 'readwrite');
-         let store = tx.objectStore('reviews');
-         myReviews.forEach(element => {
-            store.put(element);
-           });
-           console.log("Put Reviews in Db.");
-           for (let id in myReviews.value){
-             myReviews.get(id);
-           }
-           callback(null, myReviews);
-           return tx.complete;
-           console.log("End tx.");
-         });
-       }).catch(function(error){
-         console.log('FETCH Parsing Error', error);
-         callback(error, null);
-       });
-     })
-   }
-
-
-
   /** 1 Fetch a restaurant by its ID. */
   static fetchRestaurantById(id, callback) {
     // // fetch all restaurants with proper error handling.
