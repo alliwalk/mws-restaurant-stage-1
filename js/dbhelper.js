@@ -210,27 +210,63 @@
     });
   }
 
+  static getReviews(id, callback) {
+    console.log("returning rev data");
+     fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`).then(response => {
+      if(!response.ok){
+        throw new Error('ERROR: response not ok.')
+       } return response.json().then(myReviews => {
+          console.log("returning rev data", myReviews);
+          dbPromise.then(db => {
+          let tx = db.transaction('reviews', 'readwrite');
+          let store = tx.objectStore('reviews');
+          myReviews.forEach(element => {
+             store.put(element);
+             console.log(element);
+            });
+            console.log("Put Reviews in Db.");
+            for (let id in myReviews.value){
+              myReviews.get(id);
+            }
+            callback(null, myReviews);
+            return tx.complete;
+            console.log("End tx.");
+          });
+        }).catch(function(error){
+          console.log('FETCH Parsing Error', error);
+          callback(error, null);
+        });
+      })
+    }
+
   /* Use Fetch to add new review
   https://www.youtube.com/watch?v=XbCwxeCqxw4 */
-  static putReview(id) {
-    console.log('Adding a review for: ', id);
-
-    fetch(`http://localhost:1337/restaurant.html?id=${restaurant.id}`, {method: 'POST'})
+  static putReview(review, id) {
+    console.log('Adding a review for: ', JSON.stringify(review));
+    fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`, {method: 'POST'})
     .then(function(response) {
+      console.log('* after FETCH is * ', JSON.stringify(review));
       console.log('Status: ', response.status );
         if(!response.ok){
           throw new Error('ERROR: response not ok.')
         }
-      response.json().then(function(getRevData){
-        console.log('FETCH Result', getRevData);
+      response.json().then(function(data){
+        console.log(response);
+        console.log('FETCH Result', JSON.stringify(data));
         dbPromise.then(function(db) {
-          let tx = db.transaction('review', 'readwrite');
-          let store = tx.objectStore('review');
-          store.get(restaurant_id).then(review => {
-            // restaurant.is_favorite = isFavorite;
-            store.put(review);
-            console.log(review);
-          });
+          var tx = db.transaction('reviews', 'readwrite');
+          var store = tx.objectStore('reviews');
+          var index = store.index('id');
+          return index;
+          console.log(data);
+
+          //   data.forEach(element => {
+          //     store.put(element);
+          //     console.log(review);
+          //     for (let id in data.value){
+          //       data.get(id);
+          //     }
+          // });
         })
         .catch(function(error){
           console.log('FETCH Parsing Error', error);
