@@ -177,7 +177,6 @@ createRestaurantHTML = (restaurant) => {
     restaurant.is_favorite = !restaurant.is_favorite
     changeFavit(favorite, restaurant.is_favorite)
   };
-  // changeFavit(favorite, restaurant.is_favorite)
   li.append(favorite);
 
 
