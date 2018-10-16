@@ -7,7 +7,7 @@
         upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
       case 1:
         var reviewStore = upgradeDb.createObjectStore('reviews', {keyPath: 'id', autoIncrement: true});
-          reviewStore.createIndex('restaurant', 'restaurant_id');
+          reviewStore.createIndex('id', 'restaurant_id');
     }
   });
 
