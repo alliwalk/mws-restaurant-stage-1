@@ -191,8 +191,13 @@
   https://www.youtube.com/watch?v=XbCwxeCqxw4 */
   static putReview(review, id) {
     console.log('Adding a review for: ', JSON.stringify(review));
-    fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`, {method: 'POST'})
-    .then(function(response) {
+
+    fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`,
+      {method: 'POST',
+      credentials: 'include',
+      body: JSON.stringify(review),
+      headers:{'Content-Type': 'application/json'}
+    }).then(function(response) {
       console.log('* after FETCH is * ', JSON.stringify(review));
       console.log('Status: ', response.status );
         if(!response.ok){
