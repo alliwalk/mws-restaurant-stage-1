@@ -17,6 +17,7 @@ var filesToCache = [
   'img/8.jpg',
   'img/9.jpg',
   'img/10.jpg',
+  'manifest.webmanifest',
   // 'data/restaurants.json',
   // 'index.js',
   'sw.js'
@@ -99,10 +100,3 @@ self.addEventListener('fetch', function(event) {
 //   var KeyValStore = upgradeDb.createObjectStore('keyval');
 //   KeyValStore.put('world', 'hello');
 // });
-
-
-
-
-
-
-
