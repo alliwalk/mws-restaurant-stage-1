@@ -41,7 +41,7 @@ self.addEventListener('install', function(event){
   );
 });
 
-// Activate serviceWorker
+// Activate serviceWorker -- help from Slack, Oct 17
 self.addEventListener('activate', function(event) {
   console.log("[Service Worker] Activated");
 
@@ -65,32 +65,29 @@ self.addEventListener('fetch', function(event) {
   console.log('Handling fetch event for', event.request.url);
 
   event.respondWith(
-    caches.match(event.request).then(function(response) {
-      if (response) {
-        console.log('Found response in cache:', response);
-
-        return response;
+    caches.match(event.request).then(function(cacheResponse) {
+      if (cacheResponse) {
+        return cacheResponse;
       }
       console.log('No response found in cache. About to fetch from network...');
 
-      return fetch(event.request).then(function(response) {
-        console.log('Response from network is:', response);
-
+      return fetch(event.request).then(function (fetchResponse) {
         //put new request into cache?
-        return caches.open(staticCacheName).then(function(cache) {
-          console.log("[Service Worker] New Data, new", event.request.url);
-          cache.add(event.request.url, response.clone());
+        return caches
+          .open(staticCacheName)
+          .then(function (cache) {
+            console.log("[Service Worker] New Data, new", event.request.url);
+            cache.add(event.request.url, fetchResponse.clone());
+
+            return fetchResponse;
+            });
+        }, function (error) {
+          console.error('Fetching failed:', error);
+
+          throw error;
         });
-
-        return response;
-      }, function(error) {
-        console.error('Fetching failed:', error);
-
-        throw error;
-      });
-    })
-  );
-});
+      }));
+    });
 
 
 // Create indexDB
