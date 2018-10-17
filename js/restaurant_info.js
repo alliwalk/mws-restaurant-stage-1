@@ -225,7 +225,9 @@ createReviewHTML = (review) => {
   li.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = review.date;
+  var ts = new Date();
+  // console.log(ts.toLocaleString(review.date));
+  date.innerHTML = ts.toTimeString(review.date);
   li.appendChild(date);
 
   const rating = document.createElement('p');
