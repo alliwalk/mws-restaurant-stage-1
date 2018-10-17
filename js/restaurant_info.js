@@ -145,8 +145,7 @@ function addReview() {
   // create variables for each review element
     const id = getParameterByName('id');
     let restaurant_id = id;
-    let name = review.name;;
-    let date = review.date;
+    let name = document.getElementById('reviewer_name').value;
     let rating = document.getElementById('rating').value;
     let comments = document.getElementById('comment_text').value;
     const review = [{
