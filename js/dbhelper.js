@@ -192,6 +192,8 @@
   static putReview(review, id) {
     console.log('Adding a review for: ', JSON.stringify(review));
 
+    createReviewHTML(review, id);
+
     fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`,
       {method: 'POST',
       credentials: 'include',
