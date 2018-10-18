@@ -87,7 +87,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   // fill reviews
   console.log('populate reviews');
 
-  DBHelper.getReviews(restaurant.id, (error, reviews) => {
+  DBHelper.getReviewsById(restaurant.id, (error, reviews) => {
     if (error) {
       callback (error, null)
     } else {
