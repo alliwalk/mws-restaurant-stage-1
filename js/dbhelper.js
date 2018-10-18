@@ -158,7 +158,7 @@
     });
   }
 
-  static getReviews(id, callback) {
+  static getReviewsById(id, callback) {
     console.log("returning rev data");
      fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`).then(response => {
       if(!response.ok){
