@@ -137,7 +137,7 @@ function addReview() {
         rating: rating,
         comments: comments
       }];
-
+      // debugger;
       // idb_request.addEventListener("upgradeneeded", function(e){
       //   var saveReview = this.result.createObjectStore("reviewTemp", { autoIncrement: true });
       // })
@@ -145,7 +145,7 @@ function addReview() {
     console.log(review, id);
 
     // debugger;
-    DBHelper.putReview();
+    DBHelper.putReview(review, id);
 }
 
  /*
