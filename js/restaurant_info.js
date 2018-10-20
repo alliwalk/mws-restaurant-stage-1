@@ -180,9 +180,11 @@ function addReview() {
  */
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   const container = document.getElementById('reviews-container');
-  const title = document.createElement('h2');
-  title.innerHTML = 'Reviews';
-  container.appendChild(title);
+  // const title = document.createElement('h2');
+  // title.innerHTML = 'Reviews';
+  // container.appendChild(title);
+  //
+
   if (!reviews) {
     const noReviews = document.createElement('p');
     noReviews.innerHTML = 'No reviews yet!';
@@ -190,6 +192,7 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
     return;
   }
   const ul = document.getElementById('reviews-list');
+
   reviews.forEach(review => {
     ul.appendChild(createReviewHTML(review));
   });
