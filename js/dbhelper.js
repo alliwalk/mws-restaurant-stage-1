@@ -187,11 +187,9 @@
       })
     }
 
-  /* Use Fetch to add new review
-  https://www.youtube.com/watch?v=XbCwxeCqxw4 */
+  /* Use Fetch to add new review -- https://www.youtube.com/watch?v=XbCwxeCqxw4 */
   static putReview(review, id) {
     console.log('Adding a review for: ', JSON.stringify(review));
-
     createReviewHTML(review, id);
 
     fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`,
@@ -206,22 +204,24 @@
           throw new Error('ERROR: response not ok.')
         }
       response.json().then(function(data){
-        console.log(response);
         console.log('FETCH Result', JSON.stringify(data));
         dbPromise.then(function(db) {
-          var tx = db.transaction('reviews', 'readwrite');
-          var store = tx.objectStore('reviews');
-          var index = store.index('id');
-          return index;
-          console.log(data);
+          let tx = db.transaction('reviews', 'readwrite');
+          let store = tx.objectStore('reviews');
+          let index = store.index('id');
+          data.forEach(rev => {
+            store.put(rev);
+            console.log("this is ", rev);
+            fillReviewsHTML(review, id);
+          });
 
-          //   data.forEach(element => {
-          //     store.put(element);
-          //     console.log(review);
-          //     for (let id in data.value){
-          //       data.get(id);
-          //     }
-          // });
+          // for (let id in data.value){
+          //   data.get(id);
+          //   fillReviewsHTML(review, id);
+          // }
+// return index;
+          return tx.complete;
+          console.log('end rev');
         })
         .catch(function(error){
           console.log('FETCH Parsing Error', error);
