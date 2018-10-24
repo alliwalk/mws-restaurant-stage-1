@@ -198,21 +198,6 @@ createRestaurantHTML = (restaurant) => {
   return li;
 }
 
-// Found via: https://www.youtube.com/watch?v=XbCwxeCqxw4
-// changeFavit = (btn, fav) => {
-//   if(!fav){
-//     console.log("Not a favit! Grey");
-//     btn.classList.remove('fav_yes');
-//     btn.classList.add('fav_no')
-//     btn.setAttribute('aria-label', 'Mark as favorite');
-//   } else {
-//     console.log("Favit! Red");
-//     btn.classList.remove('fav_no');
-//     btn.classList.add('fav_yes');
-//     btn.setAttribute('aria-label', 'Remove favorite');
-//   }
-// }
-
 // Based on...https://www.youtube.com/watch?v=XbCwxeCqxw4
 changeFavit = (btn, fav) => {
   if(!fav){
