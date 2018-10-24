@@ -256,27 +256,30 @@
 
 
 
-
-
   /* Use Fetch to update restaurant favorite.
   https://www.youtube.com/watch?v=XbCwxeCqxw4 */
   static updateFavoriteStatus(restaurantId, isFavorite) {
-    console.log('changing status to: ', isFavorite);
+
+    // if (navigator.onLine) {
+    //   console.log('online');
+    // } else {
+    //   console.log('offline');
+    // }
 
     fetch(`http://localhost:1337/restaurants/${restaurantId}/?is_favorite=${isFavorite}`, {method: 'PUT'}).then(function(response) {
       console.log('Status: ', response.status );
         if(!response.ok){
           throw new Error('ERROR: response not ok.')
         }
-      response.json().then(function(getFavData){
-        console.log('FETCH Result', getFavData);
-        dbPromise.then(function(db) {
-          let tx = db.transaction('restaurants', 'readwrite');
-          let store = tx.objectStore('restaurants');
-          store.get(restaurantId).then(restaurant => {
-            restaurant.is_favorite = isFavorite;
-            store.put(restaurant);
-          });
+        response.json().then(function(getFavData){
+          console.log('FETCH Result', getFavData);
+          dbPromise.then(function(db) {
+            let tx = db.transaction('restaurants', 'readwrite');
+            let store = tx.objectStore('restaurants');
+            store.get(restaurantId).then(restaurant => {
+              restaurant.is_favorite = isFavorite;
+              store.put(restaurant);
+            });
         })
         .catch(function(error){
           console.log('FETCH Parsing Error', error);
