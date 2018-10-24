@@ -223,6 +223,11 @@ createReviewHTML = (review) => {
   comments.innerHTML = review.comments;
   li.appendChild(comments);
 
+  // const remove = document.createElement('a');
+  // // const remove = document.createElement('p');
+  // remove.innerHTML = 'Remove comment';
+  // li.appendChild(remove);
+
   return li;
 }
 
