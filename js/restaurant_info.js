@@ -211,8 +211,8 @@ createReviewHTML = (review) => {
 
   const date = document.createElement('p');
   var ts = new Date();
-  // console.log(ts.toLocaleString(review.date));
-  date.innerHTML = ts.toTimeString(review.date);
+  date.innerHTML = new Date(review.createdAt).toLocaleDateString();
+  // from https://alexandroperez.github.io/mws-walkthrough
   li.appendChild(date);
 
   const rating = document.createElement('p');
