@@ -1,6 +1,7 @@
 
 /* Common database helper functions. */
 
+
   const dbPromise = idb.open('restaurant-db', 1, upgradeDb => {
     switch (upgradeDb.oldVersion){
       case 0:
@@ -144,6 +145,18 @@
   }
 
 
+  // static checkOnline(){
+  //   window.addEventListener("offline", function(event) {
+  //      if(!event.navigator.online == true) {
+  //         console.log("offline");
+  //       }
+  //     else{
+  //       console.log("online");
+  //     }
+  //     return;
+  //   });
+  // }
+
 
   // Just gets reviews
   static getReviewsById(id, callback) {
@@ -274,73 +287,102 @@
   //   })
   // }
 
-  static putReview(review, id) {
-  console.log("[putReview()] Adding a review for ", JSON.stringify(review));
-  createReviewHTML(review, id);
+// window.eventListener('offline');
+// listen for offline status
+//   if offline
+//     on submit
+//       put code into offline_db
+//       return
+//   set offline status to true
+//   return
+//
+// window.eventListener('offline-true')
+// if offline-true
+//   check for online.Status
+//     if onLine
+//       get all posting from offline_db
+//       put all onto webpage
+//       return
+//     else {
+//       return
+//     }
 
-    fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`,
-      { method: 'POST',
-        credentials: 'include',
-        body: JSON.stringify(review),
-        headers:{'Content-Type': 'application/json'}
-      }).then(response => {
+  static putReview(review, id) {
+    console.log("[putReview()] Adding a review for ", JSON.stringify(review));
+    createReviewHTML(review, id);
+
+    // // check if online
+    // if (!navigator.onLine && (offline_obj.name === 'addReview')) {
+    //   DBHelper.sendDataWhenOnline(offline_obj);
+    //   return;
+    // }
+
+
+      fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`,
+        { method: 'POST',
+          credentials: 'include',
+          body: JSON.stringify(review),
+          headers:{'Content-Type': 'application/json'}
+        })
+      .then(response => {
         console.log('* after FETCH is * ', JSON.stringify(review));
         console.log('Status: ', response.status );
         if(!response.ok){
           throw new Error('ERROR: response not ok.')
         }
 
-        return response.json().then(function(data){
-        console.log('FETCH Result', JSON.stringify(data));
+        return response.json()
+        .then(function(data){
 
-        dbPromise.then(db => {
-          let tx = db.transaction('offline', 'readwrite');
-          let store = tx.objectStore('offline');
-          if(!response.status > 199){
-            store.put(rev);
-            return;
-            console.log('status is not 200');
-            fillReviewsHTML(review, id); // adds reviews to the page
-          } else {
-            data.forEach(rev => {
+          // if offline
+          // put data into
+
+          console.log('FETCH Result', JSON.stringify(data));
+          dbPromise.then(db => {
+            let tx = db.transaction('offline', 'readwrite');
+            let store = tx.objectStore('offline');
+
+            if (!navigator.onLine) {
               store.put(rev);
-              console.log("This is ", rev);
-              debugger;
+              return;
+              console.log('status is not 200');
               fillReviewsHTML(review, id); // adds reviews to the page
-              store.delete(id);
-              console.log("deleted ")
-            });
-          }
-          return tx.complete;
-          console.log('end rev');
-          }).then(function(reviews){
-            fillReviewsHTML(review, id);
-          })
-            if (data.result === 'success') {
+            } else if (navigator.onLine) {
               data.forEach(rev => {
                 store.put(rev);
-                console.log("this is ", rev);
+                console.log("This is ", rev);
                 fillReviewsHTML(review, id); // adds reviews to the page
+                store.delete(id);
+                console.log("deleted ")
               });
-            } else {
-              fillReviewsHTML(review, id);
             }
+            return tx.complete;
+            console.log('end rev');
+          }) //end dbPromise
 
-            for (let id in data.value){
-              data.get(id);
-              fillReviewsHTML(review, id);
+          .then(function(reviews){ fillReviewsHTML(review, id); })
+
+          if (data.result === 'success') {
+            data.forEach(rev => {
+              store.put(rev);
+              console.log("this is ", rev);
+              fillReviewsHTML(review, id); // adds reviews to the page
+            });
+          } else { fillReviewsHTML(review, id); }
+
+          for (let id in data.value){
+            data.get(id);
+            fillReviewsHTML(review, id);
             }
           return index;
-        })
+          })
         .catch(function(error){
           console.log('FETCH Parsing Error', error);
         });
     }).catch(function(error) {
-       console.log('FETCH Failed', error);
-    })
-  });
-}
-
+      console.log('FETCH Failed', error);
+      })
+  };
 
 
   // static putReviewsWhenOnline(review, id) {
