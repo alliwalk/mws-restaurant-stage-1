@@ -205,88 +205,88 @@
 
 
 // doug's looping version - https://github.com/thefinitemonkey/udacity-restaurant-reviews/blob/master/app/js/dbhelper.js
-  // static addRequestToQueue(review, id) {
-  //   // Open the database ad add the request details to the pending table
-  //   dbPromise.then(db => {
-  //     let tx = db.transaction('offline', 'readwrite');
-  //     let store = tx.objectStore('offline').put({
-  //       data: {
-  //         url,
-  //         method,
-  //         body
-  //       }
-  //     })
-  //   })
-  //   .catch(function(error){
-  //     console.log('FETCH Parsing Error', error);
-  //   }).then(DBHelper.nextOffline());
-  // }
-  //
-  // static nextOffline(){
-  //   // Call the nextPending function to loop over the Queue
-  //   DBHelper.tryToPost(DBHelper.nextOffline);
-  // }
-  //
-  // static tryToPost(callback){
-  //   let url, method, body;
-  //   // first check for obj: if nothing in obj, db.close() & return;
-  //   dbPromise.then(db => {
-  //     if(!db.objectStoreNames.length){
-  //       console.log("DB not available");
-  //       db.close();
-  //       return
-  //     }
-  //     // else, open db trans.
-  //     let tx = db.transaction("offline", "readwrite");
-  //     let store = tx.objectStore("offline")
-  //     // then open a cursor
-  //     .openCursor().then(cursor => {
-  //       if(!cursor){
-  //         return;
-  //       }
-  //       let value = cursor.value;
-  //       url = cursor.value.data.method;
-  //       body = cursor.value.data.body;
-  //       method = cursor.value.data.method;
-  //
-  //       // for each item it encounters, check that the item is good.
-  //       if((!url || !method) || (method === "POST" && !body)){
-  //         cursor.delete().then(callback());
-  //         // if not, delete the item, run the callback, return
-  //         return;
-  //       };
-  //
-  //       const properties = {
-  //         //this is the body of whatever it is
-  //         body: JSON.stringify(body), method: method
-  //       }
-  //
-  //       console.log("sending from queue ", properties);
-  //       //then fetch the JSON
-  //       fetch(url, properties)
-  //       .then(response => {
-  //         // if the response is bad, return
-  //         if(!response.ok && !response.redirected){
-  //           return;
-  //         }
-  //       })
-  //       .then(function(){
-  //         // else data is good, so use the cursor to delete the item
-  //         let deleteTx = db.transaction("offline", "readwrite");
-  //         let deleteObj = db.objectStore("offline").openCursor()
-  //           .then(cursor => {
-  //             cursor.delete().then(() => {
-  //               callback();
-  //             })
-  //           })
-  //       })
-  //       .catch(error => {
-  //         console.log("Error reading cursor");
-  //         return;
-  //       })
-  //     })
-  //   })
-  // }
+  static addRequestToQueue(review, id) {
+    // Open the database ad add the request details to the pending table
+    dbPromise.then(db => {
+      let tx = db.transaction('offline', 'readwrite');
+      let store = tx.objectStore('offline').put({
+        data: {
+          url,
+          method,
+          body
+        }
+      })
+    })
+    .catch(function(error){
+      console.log('FETCH Parsing Error', error);
+    }).then(DBHelper.nextOffline());
+  }
+
+  static nextOffline(){
+    // Call the nextPending function to loop over the Queue
+    DBHelper.tryToPost(DBHelper.nextOffline);
+  }
+
+  static tryToPost(callback){
+    let url, method, body;
+    // first check for obj: if nothing in obj, db.close() & return;
+    dbPromise.then(db => {
+      if(!db.objectStoreNames.length){
+        console.log("DB not available");
+        db.close();
+        return
+      }
+      // else, open db trans.
+      let tx = db.transaction("offline", "readwrite");
+      let store = tx.objectStore("offline")
+      // then open a cursor
+      .openCursor().then(cursor => {
+        if(!cursor){
+          return;
+        }
+        let value = cursor.value;
+        url = cursor.value.data.method;
+        body = cursor.value.data.body;
+        method = cursor.value.data.method;
+
+        // for each item it encounters, check that the item is good.
+        if((!url || !method) || (method === "POST" && !body)){
+          cursor.delete().then(callback());
+          // if not, delete the item, run the callback, return
+          return;
+        };
+
+        const properties = {
+          //this is the body of whatever it is
+          body: JSON.stringify(body), method: method
+        }
+
+        console.log("sending from queue ", properties);
+        //then fetch the JSON
+        fetch(url, properties)
+        .then(response => {
+          // if the response is bad, return
+          if(!response.ok && !response.redirected){
+            return;
+          }
+        })
+        .then(function(){
+          // else data is good, so use the cursor to delete the item
+          let deleteTx = db.transaction("offline", "readwrite");
+          let deleteObj = db.objectStore("offline").openCursor()
+            .then(cursor => {
+              cursor.delete().then(() => {
+                callback();
+              })
+            })
+        })
+        .catch(error => {
+          console.log("Error reading cursor");
+          return;
+        })
+      })
+    })
+  }
 
 //how it should work
 // window.eventListener('offline');
@@ -344,20 +344,16 @@
             let tx = db.transaction('offline', 'readwrite');
             let store = tx.objectStore('offline');
 
-            if (!navigator.onLine) {
+            data.forEach(rev => {
               store.put(rev);
-              return;
-              console.log('status is not 200');
+              console.log("This is ", rev);
               fillReviewsHTML(review, id); // adds reviews to the page
-            } else if (navigator.onLine) {
-              data.forEach(rev => {
-                store.put(rev);
-                console.log("This is ", rev);
-                fillReviewsHTML(review, id); // adds reviews to the page
-                store.delete(id);
-                console.log("deleted ")
-              });
-            }
+              store.delete(id);
+              console.log("deleted ")
+            })
+            .catch(function(error){
+              console.log('DB Error', error);
+            })
             return tx.complete;
             console.log('end rev');
           }) //end dbPromise
@@ -376,7 +372,8 @@
             data.get(id);
             fillReviewsHTML(review, id);
             }
-          return index;
+          // debugger;
+          return;
           })
         .catch(function(error){
           console.log('FETCH Parsing Error', error);
