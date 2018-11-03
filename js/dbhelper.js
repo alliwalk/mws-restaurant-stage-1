@@ -189,6 +189,7 @@
       })
     }
 
+// writeup for doug's version
 // Open the database ad add the request details to the pending table
 // Call the nextPending function to loop over the Queue
 // Iterate over the pending items until there is a network failure
@@ -203,7 +204,7 @@
   // catch errors
 
 
-// doug's code
+// doug's looping version - https://github.com/thefinitemonkey/udacity-restaurant-reviews/blob/master/app/js/dbhelper.js
   // static addRequestToQueue(review, id) {
   //   // Open the database ad add the request details to the pending table
   //   dbPromise.then(db => {
@@ -287,6 +288,7 @@
   //   })
   // }
 
+//how it should work
 // window.eventListener('offline');
 // listen for offline status
 //   if offline
