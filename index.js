@@ -10,3 +10,8 @@ if (navigator.serviceWorker){
         console.log("Service Worker failed to register", err);
     })
 }
+
+// 
+// navigator.serviceWorker.ready.then(function(swRegistration){
+//   return swRegistration.sync.register('myFirstSync');
+// })
