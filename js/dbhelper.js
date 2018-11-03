@@ -6,26 +6,11 @@
       case 0:
         upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
       case 1:
-        var reviewStore = upgradeDb.createObjectStore('reviews', {keyPath: 'id', autoIncrement: true});
-          reviewStore.createIndex('id', 'restaurant_id');
+        upgradeDb.createObjectStore('reviews', {keyPath: 'id', autoIncrement: true});
+      case 2:
+        upgradeDb.createObjectStore('offline', {keyPath: 'id', autoIncrement:true});
     }
   });
-
-
- // const dbPromise = idb.open('restaurant-idb', 1, upgradeDb => {
- //  if (!upgradeDb.objectStoreNames.contains('restaurants')) {
- //      upgradeDb.createObjectStore('restaurants', {keyPath: 'id', autoIncrement: true});
- //      }
- //    console.log("ObjectStore: Created restaurants");
- //  // if (!upgradeDb.objectStoreNames.contains('review')) {
- //  //         upgradeDb.createObjectStore('pending', {keyPath: 'name', autoIncrement: true});
- //  //     }
- //  //     console.log("ObjectStore: Created Queue for reviews");
- //  if (!upgradeDb.objectStoreNames.contains('reviews')) {
- //      upgradeDb.createObjectStore('reviews', {keyPath: 'id', autoIncrement: true});
- //      }
- //      console.log("ObjectStore: Created reviews");
- //   });
 
 
  class DBHelper {
@@ -158,21 +143,25 @@
     });
   }
 
+
+
+  // Just gets reviews
   static getReviewsById(id, callback) {
-    console.log("returning rev data");
+    console.log("[getReviewsById()] Returning reviews data");
      fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`).then(response => {
       if(!response.ok){
         throw new Error('ERROR: response not ok.')
        } return response.json().then(myReviews => {
-          console.log("returning rev data", myReviews);
+          console.log('Status: ', response.status );
+          console.log("...returning rev data for getReviewsById()");
           dbPromise.then(db => {
           let tx = db.transaction('reviews', 'readwrite');
           let store = tx.objectStore('reviews');
           myReviews.forEach(element => {
              store.put(element);
-             console.log(element);
+             // console.log(element);
             });
-            console.log("Put Reviews in Db.");
+            console.log("Put each review in Db.");
             for (let id in myReviews.value){
               myReviews.get(id);
             }
@@ -187,48 +176,189 @@
       })
     }
 
-  /* Use Fetch to add new review -- https://www.youtube.com/watch?v=XbCwxeCqxw4 */
+// Open the database ad add the request details to the pending table
+// Call the nextPending function to loop over the Queue
+// Iterate over the pending items until there is a network failure
+  // first check for obj: if nothing in obj, db.close() & return;
+  // else, open db trans.
+  // then open a cursor;
+    // for each item it encounters, check that the item is good.
+    // if not, delete the item, run the callback, return
+  //then fetch the JSON
+    // if the response is bad, return
+    // else data is good, so use the cursor to delete the item
+  // catch errors
+
+
+// doug's code
+  // static addRequestToQueue(review, id) {
+  //   // Open the database ad add the request details to the pending table
+  //   dbPromise.then(db => {
+  //     let tx = db.transaction('offline', 'readwrite');
+  //     let store = tx.objectStore('offline').put({
+  //       data: {
+  //         url,
+  //         method,
+  //         body
+  //       }
+  //     })
+  //   })
+  //   .catch(function(error){
+  //     console.log('FETCH Parsing Error', error);
+  //   }).then(DBHelper.nextOffline());
+  // }
+  //
+  // static nextOffline(){
+  //   // Call the nextPending function to loop over the Queue
+  //   DBHelper.tryToPost(DBHelper.nextOffline);
+  // }
+  //
+  // static tryToPost(callback){
+  //   let url, method, body;
+  //   // first check for obj: if nothing in obj, db.close() & return;
+  //   dbPromise.then(db => {
+  //     if(!db.objectStoreNames.length){
+  //       console.log("DB not available");
+  //       db.close();
+  //       return
+  //     }
+  //     // else, open db trans.
+  //     let tx = db.transaction("offline", "readwrite");
+  //     let store = tx.objectStore("offline")
+  //     // then open a cursor
+  //     .openCursor().then(cursor => {
+  //       if(!cursor){
+  //         return;
+  //       }
+  //       let value = cursor.value;
+  //       url = cursor.value.data.method;
+  //       body = cursor.value.data.body;
+  //       method = cursor.value.data.method;
+  //
+  //       // for each item it encounters, check that the item is good.
+  //       if((!url || !method) || (method === "POST" && !body)){
+  //         cursor.delete().then(callback());
+  //         // if not, delete the item, run the callback, return
+  //         return;
+  //       };
+  //
+  //       const properties = {
+  //         //this is the body of whatever it is
+  //         body: JSON.stringify(body), method: method
+  //       }
+  //
+  //       console.log("sending from queue ", properties);
+  //       //then fetch the JSON
+  //       fetch(url, properties)
+  //       .then(response => {
+  //         // if the response is bad, return
+  //         if(!response.ok && !response.redirected){
+  //           return;
+  //         }
+  //       })
+  //       .then(function(){
+  //         // else data is good, so use the cursor to delete the item
+  //         let deleteTx = db.transaction("offline", "readwrite");
+  //         let deleteObj = db.objectStore("offline").openCursor()
+  //           .then(cursor => {
+  //             cursor.delete().then(() => {
+  //               callback();
+  //             })
+  //           })
+  //       })
+  //       .catch(error => {
+  //         console.log("Error reading cursor");
+  //         return;
+  //       })
+  //     })
+  //   })
+  // }
+
   static putReview(review, id) {
-    console.log('Adding a review for: ', JSON.stringify(review));
-    createReviewHTML(review, id);
+  console.log("[putReview()] Adding a review for ", JSON.stringify(review));
+  createReviewHTML(review, id);
 
     fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`,
-      {method: 'POST',
-      credentials: 'include',
-      body: JSON.stringify(review),
-      headers:{'Content-Type': 'application/json'}
-    }).then(function(response) {
-      console.log('* after FETCH is * ', JSON.stringify(review));
-      console.log('Status: ', response.status );
+      { method: 'POST',
+        credentials: 'include',
+        body: JSON.stringify(review),
+        headers:{'Content-Type': 'application/json'}
+      }).then(response => {
+        console.log('* after FETCH is * ', JSON.stringify(review));
+        console.log('Status: ', response.status );
         if(!response.ok){
           throw new Error('ERROR: response not ok.')
         }
-      response.json().then(function(data){
-        console.log('FETCH Result', JSON.stringify(data));
-        dbPromise.then(function(db) {
-          let tx = db.transaction('reviews', 'readwrite');
-          let store = tx.objectStore('reviews');
-          let index = store.index('id');
-          data.forEach(rev => {
-            store.put(rev);
-            console.log("this is ", rev);
-            fillReviewsHTML(review, id);
-          });
 
-          // for (let id in data.value){
-          //   data.get(id);
-          //   fillReviewsHTML(review, id);
-          // }
-// return index;
+        return response.json().then(function(data){
+        console.log('FETCH Result', JSON.stringify(data));
+
+        dbPromise.then(db => {
+          let tx = db.transaction('offline', 'readwrite');
+          let store = tx.objectStore('offline');
+          if(!response.status > 199){
+            store.put(rev);
+            return;
+            console.log('status is not 200');
+            fillReviewsHTML(review, id); // adds reviews to the page
+          } else {
+            data.forEach(rev => {
+              store.put(rev);
+              console.log("This is ", rev);
+              debugger;
+              fillReviewsHTML(review, id); // adds reviews to the page
+              store.delete(id);
+              console.log("deleted ")
+            });
+          }
           return tx.complete;
           console.log('end rev');
+          }).then(function(reviews){
+            fillReviewsHTML(review, id);
+          })
+            if (data.result === 'success') {
+              data.forEach(rev => {
+                store.put(rev);
+                console.log("this is ", rev);
+                fillReviewsHTML(review, id); // adds reviews to the page
+              });
+            } else {
+              fillReviewsHTML(review, id);
+            }
+
+            for (let id in data.value){
+              data.get(id);
+              fillReviewsHTML(review, id);
+            }
+          return index;
         })
         .catch(function(error){
           console.log('FETCH Parsing Error', error);
         });
-      });
-    });
-  }
+    }).catch(function(error) {
+       console.log('FETCH Failed', error);
+    })
+  });
+}
+
+
+
+  // static putReviewsWhenOnline(review, id) {
+  //   console.log('Online so adding reviews: ', JSON.parse(review));
+  //
+  //
+  //   dbPromise.then(db => {
+  //     let tx = db.transaction('reviews', 'readwrite');
+  //     let store = tx.objectStore('reviews');
+  //     let index = store.index('id');
+  //
+  //   }
+  //   fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`,
+  //     }).then(function(response) {
+  //     console.log('* after FETCH is * ', JSON.stringify(review));
+  //     console.log('Status: ', response.status );
+  //   });
+  // }
 
 
 
@@ -256,15 +386,8 @@
 
 
 
-  /* Use Fetch to update restaurant favorite.
-  https://www.youtube.com/watch?v=XbCwxeCqxw4 */
+  /* Use Fetch to update restaurant favorite. */
   static updateFavoriteStatus(restaurantId, isFavorite) {
-
-    // if (navigator.onLine) {
-    //   console.log('online');
-    // } else {
-    //   console.log('offline');
-    // }
 
     fetch(`http://localhost:1337/restaurants/${restaurantId}/?is_favorite=${isFavorite}`, {method: 'PUT'}).then(function(response) {
       console.log('Status: ', response.status );
@@ -277,7 +400,7 @@
             let tx = db.transaction('restaurants', 'readwrite');
             let store = tx.objectStore('restaurants');
             store.get(restaurantId).then(restaurant => {
-              restaurant.is_favorite = isFavorite;
+              restaurant.is_favorite = isFavorite; /* SEE - https://www.youtube.com/watch?v=XbCwxeCqxw4*/
               store.put(restaurant);
             });
         })
