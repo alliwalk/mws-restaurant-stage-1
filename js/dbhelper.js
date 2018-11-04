@@ -144,20 +144,6 @@
     });
   }
 
-
-  // static checkOnline(){
-  //   window.addEventListener("offline", function(event) {
-  //      if(!event.navigator.online == true) {
-  //         console.log("offline");
-  //       }
-  //     else{
-  //       console.log("online");
-  //     }
-  //     return;
-  //   });
-  // }
-
-
   // Just gets reviews
   static getReviewsById(id, callback) {
     console.log("[getReviewsById()] Returning reviews data");
