@@ -144,20 +144,6 @@
     });
   }
 
-
-  // static checkOnline(){
-  //   window.addEventListener("offline", function(event) {
-  //      if(!event.navigator.online == true) {
-  //         console.log("offline");
-  //       }
-  //     else{
-  //       console.log("online");
-  //     }
-  //     return;
-  //   });
-  // }
-
-
   // Just gets reviews
   static getReviewsById(id, callback) {
     console.log("[getReviewsById()] Returning reviews data");
@@ -210,17 +196,46 @@
 //       return
 //     }
 
+  // static checkOnline(){
+  //   window.addEventListener("offline", function(event) {
+  //      if(!event.navigator.online == true) {
+  //         console.log("offline");
+  //       }
+  //     else{
+  //       console.log("online");
+  //     }
+  //     return;
+  //   });
+  // }
+
+/** how navigator-test should work
+create an offline_object
+check if online using navigator.online && if object name is name of offline_object
+  if it is offline_object
+    send to dbhelper.sendDataWhenOnline
+    return
+then create another object that creates the review name, rating, coments, and restaurant_id
+
+create a variable for fetch methods
+  let fetchMethods = { method: 'POST',
+    credentials: 'include',
+    body: JSON.stringify(review),
+    headers:{'Content-Type': 'application/json'}
+  };
+
+then fetch the reviews, with fetchMethods
+.then(response => normally
+.catch
+**/
+
   static putReview(review, id) {
     console.log("[putReview()] Adding a review for ", JSON.stringify(review));
     createReviewHTML(review, id);
-
     // // check if online
     // if (!navigator.onLine && (offline_obj.name === 'addReview')) {
     //   DBHelper.sendDataWhenOnline(offline_obj);
     //   return;
     // }
-
-
       fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`,
         { method: 'POST',
           credentials: 'include',
@@ -236,7 +251,6 @@
 
         return response.json()
         .then(function(data){
-
           // if offline
           // put data into
 
