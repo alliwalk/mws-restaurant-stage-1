@@ -89,8 +89,14 @@ self.addEventListener('fetch', function(event) {
       }));
     });
 
-// self.addEventListener('sync', function(event){
-//   if(event.tag == 'myFirstSync'){
-//     event.waitUntil(doSomeStuff)
-//   }
-// })
+self.addEventListener('sync', function(event){
+  if(event.tag == 'myFirstSync'){
+    event.waitUntil(doSomeStuff)
+  }
+})
+
+function doSomeStuff() {
+  console.log(new Date(Date.now()));
+
+  return Promise.reject(new Error("fail"));
+};
