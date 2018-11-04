@@ -94,10 +94,3 @@ self.addEventListener('fetch', function(event) {
 //     event.waitUntil(doSomeStuff)
 //   }
 // })
-// Create indexDB
-// import idb from 'idb';
-
-// var dbPromise = idb.open('restaurant-db', 1, function(upgradeDB) {
-//   var KeyValStore = upgradeDb.createObjectStore('keyval');
-//   KeyValStore.put('world', 'hello');
-// });
