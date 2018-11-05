@@ -145,7 +145,7 @@ function addReview() {
     console.log(review, id);
 
     // debugger;
-    DBHelper.putReview(review, id);
+    DBHelper.useNavToPost(review);
 }
 
  /*
@@ -205,6 +205,13 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
  */
 createReviewHTML = (review) => {
   const li = document.createElement('li');
+  if (!navigator.onLine) {
+    const connection_status = document.createElement('p');
+    connection_status.classList.add('offline_label')
+    connection_status.innerHTML = "Offline"
+    li.classList.add("reviews_offline")
+    li.appendChild(connection_status);
+  }
   const name = document.createElement('p');
   name.innerHTML = review.name;
   li.appendChild(name);
