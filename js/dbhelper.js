@@ -313,19 +313,31 @@
     console.log("[putReview()] Adding a review for ", JSON.stringify(review));
     createReviewHTML(review, id);
 
-    // // check if online
-    // if (!navigator.onLine && (offline_obj.name === 'addReview')) {
-    //   DBHelper.sendDataWhenOnline(offline_obj);
-    //   return;
-    // }
+    let createOfflineObject = {
+      name: 'offlineObj',
+      data: review,
+      object_type: 'review'
+    };
+
+    if (!navigator.online && (createOfflineObject.name = 'offlineObj')) {
+      DBHelper.sendDataWhenOnline(createOfflineObject);
+      return;
+    } else {
+
+      let fetchMethods = {
+        method: 'POST',
+        credentials: 'include',
+        body: JSON.stringify(review),
+        headers:{'Content-Type': 'application/json'}
+      };
+
+      // fetch goes here
+    }
 
 
-      fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`,
-        { method: 'POST',
-          credentials: 'include',
-          body: JSON.stringify(review),
-          headers:{'Content-Type': 'application/json'}
-        })
+
+
+      fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`, fetchMethods)
       .then(response => {
         console.log('* after FETCH is * ', JSON.stringify(review));
         console.log('Status: ', response.status );
@@ -335,10 +347,6 @@
 
         return response.json()
         .then(function(data){
-
-          // if offline
-          // put data into
-
           console.log('FETCH Result', JSON.stringify(data));
           dbPromise.then(db => {
             let tx = db.transaction('offline', 'readwrite');
