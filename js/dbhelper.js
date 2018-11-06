@@ -144,20 +144,6 @@
     });
   }
 
-
-  // static checkOnline(){
-  //   window.addEventListener("offline", function(event) {
-  //      if(!event.navigator.online == true) {
-  //         console.log("offline");
-  //       }
-  //     else{
-  //       console.log("online");
-  //     }
-  //     return;
-  //   });
-  // }
-
-
   // Just gets reviews
   static getReviewsById(id, callback) {
     console.log("[getReviewsById()] Returning reviews data");
@@ -189,145 +175,13 @@
       })
     }
 
-// writeup for doug's version
-// Open the database ad add the request details to the pending table
-// Call the nextPending function to loop over the Queue
-// Iterate over the pending items until there is a network failure
-  // first check for obj: if nothing in obj, db.close() & return;
-  // else, open db trans.
-  // then open a cursor;
-    // for each item it encounters, check that the item is good.
-    // if not, delete the item, run the callback, return
-  //then fetch the JSON
-    // if the response is bad, return
-    // else data is good, so use the cursor to delete the item
-  // catch errors
-
-
-// doug's looping version - https://github.com/thefinitemonkey/udacity-restaurant-reviews/blob/master/app/js/dbhelper.js
-  // static addRequestToQueue(review, id) {
-  //   // Open the database ad add the request details to the pending table
-  //   dbPromise.then(db => {
-  //     let tx = db.transaction('offline', 'readwrite');
-  //     let store = tx.objectStore('offline').put({
-  //       data: {
-  //         url,
-  //         method,
-  //         body
-  //       }
-  //     })
-  //   })
-  //   .catch(function(error){
-  //     console.log('FETCH Parsing Error', error);
-  //   }).then(DBHelper.nextOffline());
-  // }
-  //
-  // static nextOffline(){
-  //   // Call the nextPending function to loop over the Queue
-  //   DBHelper.tryToPost(DBHelper.nextOffline);
-  // }
-  //
-  // static tryToPost(callback){
-  //   let url, method, body;
-  //   // first check for obj: if nothing in obj, db.close() & return;
-  //   dbPromise.then(db => {
-  //     if(!db.objectStoreNames.length){
-  //       console.log("DB not available");
-  //       db.close();
-  //       return
-  //     }
-  //     // else, open db trans.
-  //     let tx = db.transaction("offline", "readwrite");
-  //     let store = tx.objectStore("offline")
-  //     // then open a cursor
-  //     .openCursor().then(cursor => {
-  //       if(!cursor){
-  //         return;
-  //       }
-  //       let value = cursor.value;
-  //       url = cursor.value.data.method;
-  //       body = cursor.value.data.body;
-  //       method = cursor.value.data.method;
-  //
-  //       // for each item it encounters, check that the item is good.
-  //       if((!url || !method) || (method === "POST" && !body)){
-  //         cursor.delete().then(callback());
-  //         // if not, delete the item, run the callback, return
-  //         return;
-  //       };
-  //
-  //       const properties = {
-  //         //this is the body of whatever it is
-  //         body: JSON.stringify(body), method: method
-  //       }
-  //
-  //       console.log("sending from queue ", properties);
-  //       //then fetch the JSON
-  //       fetch(url, properties)
-  //       .then(response => {
-  //         // if the response is bad, return
-  //         if(!response.ok && !response.redirected){
-  //           return;
-  //         }
-  //       })
-  //       .then(function(){
-  //         // else data is good, so use the cursor to delete the item
-  //         let deleteTx = db.transaction("offline", "readwrite");
-  //         let deleteObj = db.objectStore("offline").openCursor()
-  //           .then(cursor => {
-  //             cursor.delete().then(() => {
-  //               callback();
-  //             })
-  //           })
-  //       })
-  //       .catch(error => {
-  //         console.log("Error reading cursor");
-  //         return;
-  //       })
-  //     })
-  //   })
-  // }
-
-//how it should work
-// window.eventListener('offline');
-// listen for offline status
-//   if offline
-//     on submit
-//       put code into offline_db
-//       return
-//   set offline status to true
-//   return
-//
-// window.eventListener('offline-true')
-// if offline-true
-//   check for online.Status
-//     if onLine
-//       get all posting from offline_db
-//       put all onto webpage
-//       return
-//     else {
-//       return
-//     }
 
   static putReview(review, id) {
     console.log("[putReview()] Adding a review for ", JSON.stringify(review));
     createReviewHTML(review, id);
 
-    // let createOfflineObject = {
-    //   name: 'offlineObj',
-    //   data: review,
-    //   object_type: 'review'
-    // };
-
     if (!navigator.online){
       console.log('site is OFFline');
-      //create an offline object?
-      // let createOfflineObject = {
-      //   name: 'offlineObj',
-      //   data: review,
-      //   object_type: 'review'
-      // };
-      //put the review into the offline db
       dbPromise.then(db => {
         let tx = db.transaction('offline', 'readwrite');
         let store = tx.objectStore('offline');
@@ -339,10 +193,6 @@
       }).catch(error => {
         console.log('FETCH Parsing Error', error);
       });
-      //do something with the offline object
-      // DBHelper.sendDataWhenOnline(createOfflineObject);
-      // return;
-
     } else {
       console.log('site is ONline');
 
@@ -354,19 +204,18 @@
         headers:{'Content-Type': 'application/json'}
       };
 
-      fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`, fetchMethods)
-      .then(response => {
-      console.log('* after FETCH is * ', JSON.stringify(review));
-      console.log('Status: ', response.status );
+      fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`, fetchMethods).then(response => {
+        console.log('* after FETCH is * ', JSON.stringify(review));
+        console.log('Status: ', response.status );
 
         if(!response.ok){
           throw new Error('ERROR: response not ok.')
         }
 
-        return response.json()
-        .then(data => {
+        return response.json().then(data => {
           console.log('FETCH Result', JSON.stringify(data));
           // go to the offline storage db
+
           dbPromise.then(db => {
             let tx = db.transaction('offline', 'readwrite');
             let store = tx.objectStore('offline');
@@ -378,18 +227,12 @@
               console.log("deleted ")
             })
           })
+
           return tx.complete;
           console.log('end rev');
-          // .then(reviews => { /* do something */})
-          // .catch(error => {
-          //   console.log('FETCH Parsing Error', error);
-          // });
-        // )
-      });
-    // .catch(error => {
-    //   console.log('FE TCH Failed', error);
-    //   })
+        });
     });
+
   } //end else
 };
 
@@ -467,25 +310,27 @@
   //     })
   // };
 
+/*
+  static putReviewsWhenOnline(review, id) {
+  window.addEventListener('online', (event) => {
+    console.log('Browser: Online again! Get data.');
+    console.log('Online so adding reviews: ', JSON.parse(review));
+  }
 
-  // static putReviewsWhenOnline(review, id) {
-  //   console.log('Online so adding reviews: ', JSON.parse(review));
-  //
-  //
-  //   dbPromise.then(db => {
-  //     let tx = db.transaction('reviews', 'readwrite');
-  //     let store = tx.objectStore('reviews');
-  //     let index = store.index('id');
-  //
-  //   }
-  //   fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`,
-  //     }).then(function(response) {
-  //     console.log('* after FETCH is * ', JSON.stringify(review));
-  //     console.log('Status: ', response.status );
-  //   });
-  // }
+    dbPromise.then(db => {
+      let tx = db.transaction('reviews', 'readwrite');
+      let store = tx.objectStore('reviews');
+      let index = store.index('id');
 
+    }
+    fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`,
+      }).then(function(response) {
+      console.log('* after FETCH is * ', JSON.stringify(review));
+      console.log('Status: ', response.status );
+    });
+  }
 
+*/
 
   /** Restaurant page URL.  */
   static urlForRestaurant(restaurant) {
