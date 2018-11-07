@@ -177,7 +177,7 @@
 
 
   static putReview(review, id) {
-    console.log("[putReview()] Adding a review for ", JSON.stringify(review));
+    console.log("[putReview()] Adding a review for ", review);
     if(review.name === ""){
       return;
       console.log('nothing here');
@@ -188,8 +188,7 @@
 
     if (!navigator.onLine){
       console.log('site is OFFline');
-        DBHelper.addReviewWhenOnline();
-      return;
+
       // dbPromise.then(db => {
       //   let tx = db.transaction('offline', 'readwrite');
       //   let store = tx.objectStore('offline');
@@ -201,6 +200,9 @@
       // }).catch(error => {
       //   console.log('FETCH Parsing Error', error);
       // });
+      DBHelper.addReviewWhenOnline();
+      return;
+
     } else {
       console.log('site is ONline');
 
@@ -243,50 +245,46 @@
   } //end else
 }
 
-  static checkForOnline(){
-    // if (!navigator.onLine){
-      alert("The site is not online. ");
-
-      // https://stackoverflow.com/questions/17883692/how-to-set-time-delay-in-javascript
-      var delayInMilliseconds = 6500; //5 second
-
-      setTimeout(function() {
-        if (!navigator.onLine){
-        //your code to be executed after 1 second
-          DBHelper.addReviewWhenOnline()
-          return;
-          } else {
-          alert("The site is online. ");
-          DBHelper.addReviewWhenOnline();
-          return;
-          }
-        }, delayInMilliseconds);
-    }
-
+ /* ...if offline...*/
   static addReviewWhenOnline(){
     // console.log(navigator.onLine);
     var result = navigator.onLine;
+      /* ...check if now online...*/
       if (result){ //is true
         console.log("ONLINE");
 
-        // dbPromise.then(db => {
-        //   let tx = db.transaction('offline', 'readwrite');
-        //   let store = tx.objectStore('offline');
-        //   return store.getAll();
-        //     fillReviewsHTML(review, id); // adds reviews to the page
-        //     store.delete(id);
-        //     console.log("deleted stuff")
-        //   }).then(function(items){
-        //     console.log("items by name: ", items)
-        //   })
-        //   return tx.complete;
-        //   console.log('end rev');
-        // })
+        /* ...if online, go through the db and get all the stuff...*/
+        dbPromise.then(db => {
+          console.log("open db");
+          let tx = db.transaction('offline', 'readwrite');
+          let store = tx.objectStore('offline');
 
+          /* Need to put in this or...*/
+          // store.forEach(review => {
+          //   store.put(review);
+          //   console.log("This is ", review);
+          //   fillReviewsHTML(review, id); // adds reviews to the page
+          //   store.delete(id);
+          //   console.log("deleted ")
+          // })
+
+          /* Put in this */
+          // return store.getAll();
+          //   fillReviewsHTML(review, id); // adds reviews to the page
+          //   store.delete(id);
+          //   console.log("deleted stuff");
+          // }).then(function(items){
+          //   console.log("items by name: ", items)
+
+          return tx.complete;
+          console.log('close db');
+
+          })
         // go to the offline Database
         // put all the stuff from the offline Database
         // delete all the stuff
         return;
+
       } else {
         console.log("OFFLINE");
         DBHelper.checkForOnline();
@@ -318,10 +316,27 @@
       // window.addEventListener('online',  updateOnlineStatus);
       // window.addEventListener('offline', updateOnlineStatus);
     // });
-
-
   }
 
+  static checkForOnline(){
+    // if (!navigator.onLine){
+      alert("The site is not online. ");
+
+      // https://stackoverflow.com/questions/17883692/how-to-set-time-delay-in-javascript
+      var delayInMilliseconds = 6500; //5 second
+
+      setTimeout(function() {
+        if (!navigator.onLine){
+        //your code to be executed after 1 second
+          DBHelper.addReviewWhenOnline()
+          return;
+          } else {
+            alert("The site is online. ");
+          DBHelper.addReviewWhenOnline();
+          return;
+          }
+        }, delayInMilliseconds);
+    }
 
     // window.addEventListener('online', (event) => {
     //   console.log('Browser: Online again! Get data.');
