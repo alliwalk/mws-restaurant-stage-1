@@ -256,8 +256,8 @@
           DBHelper.addReviewWhenOnline()
           return;
           } else {
-          DBHelper.addReviewWhenOnline();
           alert("The site is online. ");
+          DBHelper.addReviewWhenOnline();
           return;
           }
         }, delayInMilliseconds);
