@@ -183,7 +183,7 @@
       console.log('nothing here');
     }
 
-    createReviewHTML(review, id);
+    // createReviewHTML(review, id);
 
 
     if (!navigator.onLine){
@@ -245,6 +245,26 @@
   } //end else
 }
 
+static checkForOnline(){
+  // if (!navigator.onLine){
+    alert("The site is not online.");
+
+    // https://stackoverflow.com/questions/17883692/how-to-set-time-delay-in-javascript
+    var delayInMilliseconds = 6500; //5 second
+
+    setTimeout(function() {
+      if (!navigator.onLine){
+      //your code to be executed after 1 second
+        DBHelper.addReviewWhenOnline()
+        return;
+        } else {
+          alert("The site is online. ");
+        DBHelper.addReviewWhenOnline();
+        return;
+        }
+      }, delayInMilliseconds);
+  }
+
  /* ...if offline...*/
   static addReviewWhenOnline(){
     // console.log(navigator.onLine);
@@ -254,32 +274,53 @@
         console.log("ONLINE");
 
         /* ...if online, go through the db and get all the stuff...*/
-        dbPromise.then(db => {
-          console.log("open db");
-          let tx = db.transaction('offline', 'readwrite');
-          let store = tx.objectStore('offline');
 
-          /* Need to put in this or...*/
-          // store.forEach(review => {
-          //   store.put(review);
-          //   console.log("This is ", review);
-          //   fillReviewsHTML(review, id); // adds reviews to the page
-          //   store.delete(id);
-          //   console.log("deleted ")
-          // })
+          dbPromise.then(db => {
+            console.log("open db");
+            let tx = db.transaction('offline', 'readwrite');
+            let store = tx.objectStore('offline');
 
-          /* Put in this */
-          // return store.getAll();
-          //   fillReviewsHTML(review, id); // adds reviews to the page
-          //   store.delete(id);
-          //   console.log("deleted stuff");
-          // }).then(function(items){
-          //   console.log("items by name: ", items)
 
-          return tx.complete;
-          console.log('close db');
+            // /* Getting the offline queue reviews - option 1: forEach loop. But what is "item"?*/
+              // forEach(item => {
+              //   store.put(item);
+              //   console.log("This is ", review);
+              //   fillReviewsHTML(review, id); // adds reviews to the page
+              //   store.delete(id);
+              //   console.log("deleted ")
+              // })
 
-          })
+
+            /* Getting the offline queue reviews - option 2: Get all. But how do you post? */
+              // return store.getAll();
+              //   fillReviewsHTML(review, id); // adds reviews to the page
+              //   store.delete(id);
+              //   console.log("deleted stuff");
+              // }).then(function(items){
+              //   console.log("items by name: ", items)
+
+            /* Getting the offline queue reviews - option 3: cursor */
+              //   return store.openCursor();
+              // }).then(function logItems(cursor) {
+              //   if (!cursor) {
+              //     return;
+              //   }
+              //   console.log('Cursored at:', cursor.key);
+              //   for (var id in cursor.value) {
+              //     store.put(id);
+              //     console.log(cursor.value[id]);
+              //   }
+              //   return cursor.continue().then(logItems);
+              // }).then(function() {
+              //   console.log('Done cursoring');
+              // });
+
+            /* This may be necessary */  
+            // return tx.complete;
+            // console.log('close db');
+
+            // })
+
         // go to the offline Database
         // put all the stuff from the offline Database
         // delete all the stuff
@@ -318,25 +359,6 @@
     // });
   }
 
-  static checkForOnline(){
-    // if (!navigator.onLine){
-      alert("The site is not online. ");
-
-      // https://stackoverflow.com/questions/17883692/how-to-set-time-delay-in-javascript
-      var delayInMilliseconds = 6500; //5 second
-
-      setTimeout(function() {
-        if (!navigator.onLine){
-        //your code to be executed after 1 second
-          DBHelper.addReviewWhenOnline()
-          return;
-          } else {
-            alert("The site is online. ");
-          DBHelper.addReviewWhenOnline();
-          return;
-          }
-        }, delayInMilliseconds);
-    }
 
     // window.addEventListener('online', (event) => {
     //   console.log('Browser: Online again! Get data.');
