@@ -178,68 +178,70 @@
 
   static putReview(review, id) {
     console.log("[putReview] Adding a review for ", review, id);
-    // createReviewHTML(review, id);
+    createReviewHTML(review, id);
 
 
     if (!navigator.onLine){
       console.log('The site is OFFline');
-
       /* put the reviews into offline db */
-      // dbPromise.then(db => {
-      //   let tx = db.transaction('offline', 'readwrite');
-      //   let store = tx.objectStore('offline');
-      //   store.put();
-      //   return;
-      //   fillReviewsHTML(review, id); // adds reviews to the page
-      // }).then(response =>{
-      //     //nothing seems to go here?
-      // }).catch(error => {
-      //   console.log('FETCH Parsing Error', error);
-      // });
+      dbPromise.then(db => {
+        let tx = db.transaction('offline', 'readwrite');
+        let store = tx.objectStore('offline');
+        store.put(review);
+        return;
+        fillReviewsHTML(review, id); // adds reviews to the page
+      }).then(response =>{
+          console.log("response: ", response);
+      }).catch(error => {
+        console.log('FETCH Parsing Error', error);
+      });
       DBHelper.addReviewWhenOnline(review, id);
       return;
 
     } else {
+      // This is if you're online when first clicking Submit.
       console.log('The site is ONline');
+      //create this fetch methods object
+      let fetchMethods = {
+        method: 'POST',
+        credentials: 'include',
+        body: JSON.stringify(review),
+        headers:{'Content-Type': 'application/json'}
+      };
 
-    //   //create this fetch methods object
-    //   let fetchMethods = {
-    //     method: 'POST',
-    //     credentials: 'include',
-    //     body: JSON.stringify(review),
-    //     headers:{'Content-Type': 'application/json'}
-    //   };
-    //
-    //   fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`, fetchMethods).then(response => {
-    //     console.log('* after FETCH is * ', JSON.stringify(review));
-    //     console.log('Status: ', response.status );
-    //
-    //     if(!response.ok){
-    //       throw new Error('ERROR: response not ok.')
-    //     }
-    //
-    //     return response.json().then(data => {
-    //       console.log('FETCH Result', JSON.stringify(data));
-    //       // go to the offline storage db
-    //
-          // dbPromise.then(db => {
-          //   let tx = db.transaction('offline', 'readwrite');
-          //   let store = tx.objectStore('offline');
-          //   data.forEach(rev => {
-          //     store.put(rev);
-          //     console.log("This is ", rev);
-          //     fillReviewsHTML(review, id); // adds reviews to the page
-          //     store.delete(id);
-          //     console.log("deleted ")
-          //   })
-          //   return tx.complete;
-          //   console.log('end rev');
-          // })
-        // });
-    // });
+      fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`, fetchMethods).then(response => {
+        console.log('* after FETCH is * ', JSON.stringify(review));
+        console.log('Status: ', response.status );
 
-  } //end else
-}
+        if(!response.ok){
+          throw new Error('ERROR: response not ok.')
+        }
+
+        return response.json().then(data => {
+          console.log('FETCH Result', JSON.stringify(data));
+
+          dbPromise.then(db => {
+            let tx = db.transaction('reviews', 'readwrite');
+            let store = tx.objectStore('reviews');
+            data.forEach(rev => {
+              store.put(rev);
+              console.log("This is ", rev);
+              fillReviewsHTML(review, id); // adds reviews to the page
+              // store.delete(id);
+              // console.log("deleted ")
+            })
+            return tx.complete;
+            console.log('end rev');
+          }).then(response =>{
+              console.log("response: ", response);
+          }).catch(error => {
+            console.log('FETCH Parsing Error', error);
+          });
+        });
+      }); //end fetch
+
+    } //end else
+  }
 
 static checkForOnline(review, id){
   // if (!navigator.onLine){
@@ -268,21 +270,27 @@ static checkForOnline(review, id){
     var result = navigator.onLine;
       /* ...check if now online...*/
       if (result){ //is true
-        console.log("ONLINE");
+        console.log("BACK ONLINE");
 
-        DBHelper.putReview(review, id);
-        console.log("go to putReview again");
+        /* This IF is if you're back online after being offline first.
+        The review is already posted to the screen, and in the offline queue.
+        Now it needs to be deleted from the offline queue.*/
         /* ...if online, go through the db and get all the stuff...*/
 
-          // dbPromise.then(db => {
-          //   console.log("open db");
-          //   return db.transaction('offline')
-          //     .objectStore('offline').getAll();
-          //   }).then(anon => {
-          //     console.log("The review: ", review, id);
-          //     fillReviewsHTML(review, id);
-          //   });
-          //
+          dbPromise.then(db => {
+            console.log("open db");
+            return db.transaction('offline')
+              .objectStore('offline')
+              .getAll();
+
+            }).then(anon => {
+              console.log("The review: ", review, id);
+
+              fillReviewsHTML(review, id); // adds reviews to the page
+              // store.delete(id);
+              // console.log("deleted ")
+            });
+
           // dbPromise.then(db => {
           //   console.log("open db again");
           //   let tx= db.transaction('offline', 'readwrite')
@@ -292,208 +300,13 @@ static checkForOnline(review, id){
           // }).then(anon => {
           //   console.log("deleted");
           // });
-
-
-            // }).then(remove => {
-            //   console.log("Ready to delete: ", review, id);
-            //   remove.delete(review, id); // adds reviews to the page
-            //   console.log("deleted ");
-              // console.log(review, id);
-            // });
-            //   console.log("Got all the stuff");
-              // fillReviewsHTML(review, id); // adds reviews to the page
-              //   store.delete(id);
-            //   getAllTheStuff.put(review);
-              // for (let id in getAllTheStuff.value){
-              //   getAllTheStuff.get(id);
-              //   console.log("This is... ", id);
-              // }
-              //
-              // getAllTheStuff.forEach(item => {
-              //   console.log("I'm here!");
-              //   store.put(item);
-              //   console.log("This is... ", review);
-              //   fillReviewsHTML(review, id); // adds reviews to the page
-              //   store.delete(id);
-              //   console.log("deleted ")
-              // })
-            // });
-
-
-            // /* Getting the offline queue reviews - option 1: forEach loop. But what is "item"?*/
-              // forEach(item => {
-              //   store.put(item);
-              //   console.log("This is ", review);
-              //   fillReviewsHTML(review, id); // adds reviews to the page
-              //   store.delete(id);
-              //   console.log("deleted ")
-              // })
-
-
-            /* Getting the offline queue reviews - option 2: Get all. But how do you post? */
-              // return store.getAll();
-              //   fillReviewsHTML(review, id); // adds reviews to the page
-              //   store.delete(id);
-              //   console.log("deleted stuff");
-              // }).then(function(items){
-              //   console.log("items by name: ", items)
-
-            /* Getting the offline queue reviews - option 3: cursor */
-              //   return store.openCursor();
-              // }).then(function logItems(cursor) {
-              //   if (!cursor) {
-              //     return;
-              //   }
-              //   console.log('Cursored at:', cursor.key);
-              //   for (var id in cursor.value) {
-              //     store.put(id);
-              //     console.log(cursor.value[id]);
-              //   }
-              //   return cursor.continue().then(logItems);
-              // }).then(function() {
-              //   console.log('Done cursoring');
-              // });
-
-            /* This may be necessary */
-            // return tx.complete;
-            // console.log('close db');
-
-            // })
-
-        // go to the offline Database
-        // put all the stuff from the offline Database
-        // delete all the stuff
         return;
 
       } else {
         console.log("OFFLINE");
         DBHelper.checkForOnline(review, id);
       }
-      // var status = document.getElementById("status");
-      // if(!navigator.onLine){
-      //   var condition = "it's offline";
-      // } else {
-      //   var condition = "it's online";
-      // }
-      // console.log(condition);
-
-      // function updateOnlineStatus(event) {
-      //   // var condition = navigator.onLine ? "online" : "offline";
-      //
-      //   // status.className = condition;
-      //   // console.log(condition);
-      //
-      //   if(navigator.onLine){
-      //     var condition = "online";
-      //   } else {
-      //     var contion = "offline";
-      //   }
-      //   console.log(condition);
-      //
-      //   // log.insertAdjacentHTML("beforeend", "Event: " + event.type + "; Status: " + condition);
-      // }
-
-      // window.addEventListener('online',  updateOnlineStatus);
-      // window.addEventListener('offline', updateOnlineStatus);
-    // });
   }
-
-
-    // window.addEventListener('online', (event) => {
-    //   console.log('Browser: Online again! Get data.');
-    //   let data = JSON.parse(localStorage.getItem('data'));
-    //
-    //   console.log('updating and cleaning ui');
-    //   [...document.querySelectorAll(".reviews_offline")]
-    //   .forEach(element => {
-    //     element.classList.remove("reviews_offline")
-    //     element.querySelector(".offline_label").remove()
-    //   });
-    //   if (data !== null) {
-    //     console.log(data);
-    //     if (createOfflineObject.name === 'offlineObj') {
-    //       DBHelper.addReview(createOfflineObject.data);
-    //     }
-
-
-      // fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`, fetchMethods)
-      // .then(response => {
-      //   console.log('* after FETCH is * ', JSON.stringify(review));
-      //   console.log('Status: ', response.status );
-      //   if(!response.ok){
-      //     throw new Error('ERROR: response not ok.')
-      //   }
-      //
-      //   return response.json()
-      //   .then(function(data){
-      //     console.log('FETCH Result', JSON.stringify(data));
-          // dbPromise.then(db => {
-          //   let tx = db.transaction('offline', 'readwrite');
-          //   let store = tx.objectStore('offline');
-          //
-          //   if (!navigator.onLine) {
-          //     store.put(rev);
-          //     return;
-          //     console.log('status is not 200');
-          //     fillReviewsHTML(review, id); // adds reviews to the page
-          //   } else if (navigator.onLine) {
-          //     data.forEach(rev => {
-          //       store.put(rev);
-          //       console.log("This is ", rev);
-          //       fillReviewsHTML(review, id); // adds reviews to the page
-          //       store.delete(id);
-          //       console.log("deleted ")
-          //     });
-          //   }
-          //   return tx.complete;
-          //   console.log('end rev');
-          // }) //end dbPromise
-  //
-  //         .then(function(reviews){ fillReviewsHTML(review, id); })
-  //
-  //         if (data.result === 'success') {
-  //           data.forEach(rev => {
-  //             store.put(rev);
-  //             console.log("this is ", rev);
-  //             fillReviewsHTML(review, id); // adds reviews to the page
-  //           });
-  //         } else { fillReviewsHTML(review, id); }
-  //
-  //         for (let id in data.value){
-  //           data.get(id);
-  //           fillReviewsHTML(review, id);
-  //           }
-  //         return index;
-  //         })
-  //       .catch(function(error){
-  //         console.log('FETCH Parsing Error', error);
-  //       });
-  //   }).catch(function(error) {
-  //     console.log('FETCH Failed', error);
-  //     })
-  // };
-
-/*
-  static putReviewsWhenOnline(review, id) {
-  window.addEventListener('online', (event) => {
-    console.log('Browser: Online again! Get data.');
-    console.log('Online so adding reviews: ', JSON.parse(review));
-  }
-
-    dbPromise.then(db => {
-      let tx = db.transaction('reviews', 'readwrite');
-      let store = tx.objectStore('reviews');
-      let index = store.index('id');
-
-    }
-    fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`,
-      }).then(function(response) {
-      console.log('* after FETCH is * ', JSON.stringify(review));
-      console.log('Status: ', response.status );
-    });
-  }
-
-*/
 
   /** Restaurant page URL.  */
   static urlForRestaurant(restaurant) {
