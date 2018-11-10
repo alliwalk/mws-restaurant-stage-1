@@ -146,7 +146,7 @@
 
   // Just gets reviews
   static getReviewsById(id, callback) {
-    console.log("[getReviewsById()] Returning reviews data");
+    console.log("[getReviewsById] Returning reviews data");
      fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`).then(response => {
       if(!response.ok){
         throw new Error('ERROR: response not ok.')
@@ -177,7 +177,7 @@
 
 
   static putReview(review, id) {
-    console.log("[putReview()] Adding a review for ", review, id);
+    console.log("[putReview] Adding a review for ", review, id);
     // createReviewHTML(review, id);
 
 
@@ -242,7 +242,7 @@
 
 static checkForOnline(review, id){
   // if (!navigator.onLine){
-    alert("The site is not online.");
+    alert("[checkForOnline] The site is not online.");
 
     // https://stackoverflow.com/questions/17883692/how-to-set-time-delay-in-javascript
     var delayInMilliseconds = 6500; //5 second
@@ -262,7 +262,7 @@ static checkForOnline(review, id){
 
  /* ...if offline...*/
   static addReviewWhenOnline(review, id){
-     console.log("Add this review when online: ", review, id);
+     console.log("[addReviewWhenOnline] Add this review when online: ", review, id);
     // console.log(navigator.onLine);
     var result = navigator.onLine;
       /* ...check if now online...*/
@@ -275,8 +275,11 @@ static checkForOnline(review, id){
             console.log("open db");
             return db.transaction('offline')
               .objectStore('offline').getAll();
+              // console.log(review, id);
             }).then(anon => console.log(anon));
-
+              console.log("Got all the stuff", review, id);
+              fillReviewsHTML(review, id); // adds reviews to the page
+              //   store.delete(id);
             // }).then (function getAllTheStuff(review){
             //   console.log("Got all the stuff", review);
             //   console.log("I'm here!");
