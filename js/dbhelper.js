@@ -184,6 +184,7 @@
     if (!navigator.onLine){
       console.log('The site is OFFline');
 
+      /* put the reviews into offline db */
       // dbPromise.then(db => {
       //   let tx = db.transaction('offline', 'readwrite');
       //   let store = tx.objectStore('offline');
@@ -253,7 +254,7 @@ static checkForOnline(review, id){
         DBHelper.addReviewWhenOnline()
         return;
         } else {
-          alert("The site is online. ");
+          alert("[checkForOnline] The site is online. ");
         DBHelper.addReviewWhenOnline(review, id);
         return;
         }
@@ -269,21 +270,39 @@ static checkForOnline(review, id){
       if (result){ //is true
         console.log("ONLINE");
 
+        DBHelper.putReview(review, id);
+        console.log("go to putReview again");
         /* ...if online, go through the db and get all the stuff...*/
 
-          dbPromise.then(db => {
-            console.log("open db");
-            return db.transaction('offline')
-              .objectStore('offline').getAll();
+          // dbPromise.then(db => {
+          //   console.log("open db");
+          //   return db.transaction('offline')
+          //     .objectStore('offline').getAll();
+          //   }).then(anon => {
+          //     console.log("The review: ", review, id);
+          //     fillReviewsHTML(review, id);
+          //   });
+          //
+          // dbPromise.then(db => {
+          //   console.log("open db again");
+          //   let tx= db.transaction('offline', 'readwrite')
+          //   let store = tx.objectStore('offline')
+          //   console.log("To delete: ", review, id);
+          //   store.delete(review, id);
+          // }).then(anon => {
+          //   console.log("deleted");
+          // });
+
+
+            // }).then(remove => {
+            //   console.log("Ready to delete: ", review, id);
+            //   remove.delete(review, id); // adds reviews to the page
+            //   console.log("deleted ");
               // console.log(review, id);
-            }).then(anon => console.log(anon));
-              console.log("Got all the stuff", review, id);
-              fillReviewsHTML(review, id); // adds reviews to the page
+            // });
+            //   console.log("Got all the stuff");
+              // fillReviewsHTML(review, id); // adds reviews to the page
               //   store.delete(id);
-            // }).then (function getAllTheStuff(review){
-            //   console.log("Got all the stuff", review);
-            //   console.log("I'm here!");
-            // // });
             //   getAllTheStuff.put(review);
               // for (let id in getAllTheStuff.value){
               //   getAllTheStuff.get(id);
