@@ -177,17 +177,12 @@
 
 
   static putReview(review, id) {
-    console.log("[putReview()] Adding a review for ", review);
-    if(review.name === ""){
-      return;
-      console.log('nothing here');
-    }
-
+    console.log("[putReview()] Adding a review for ", review, id);
     // createReviewHTML(review, id);
 
 
     if (!navigator.onLine){
-      console.log('site is OFFline');
+      console.log('The site is OFFline');
 
       // dbPromise.then(db => {
       //   let tx = db.transaction('offline', 'readwrite');
@@ -200,11 +195,11 @@
       // }).catch(error => {
       //   console.log('FETCH Parsing Error', error);
       // });
-      DBHelper.addReviewWhenOnline();
+      DBHelper.addReviewWhenOnline(review, id);
       return;
 
     } else {
-      console.log('site is ONline');
+      console.log('The site is ONline');
 
     //   //create this fetch methods object
     //   let fetchMethods = {
@@ -245,7 +240,7 @@
   } //end else
 }
 
-static checkForOnline(){
+static checkForOnline(review, id){
   // if (!navigator.onLine){
     alert("The site is not online.");
 
@@ -259,14 +254,15 @@ static checkForOnline(){
         return;
         } else {
           alert("The site is online. ");
-        DBHelper.addReviewWhenOnline();
+        DBHelper.addReviewWhenOnline(review, id);
         return;
         }
       }, delayInMilliseconds);
   }
 
  /* ...if offline...*/
-  static addReviewWhenOnline(){
+  static addReviewWhenOnline(review, id){
+     console.log("Add this review when online: ", review, id);
     // console.log(navigator.onLine);
     var result = navigator.onLine;
       /* ...check if now online...*/
@@ -277,8 +273,29 @@ static checkForOnline(){
 
           dbPromise.then(db => {
             console.log("open db");
-            let tx = db.transaction('offline', 'readwrite');
-            let store = tx.objectStore('offline');
+            return db.transaction('offline')
+              .objectStore('offline').getAll();
+            }).then(anon => console.log(anon));
+
+            // }).then (function getAllTheStuff(review){
+            //   console.log("Got all the stuff", review);
+            //   console.log("I'm here!");
+            // // });
+            //   getAllTheStuff.put(review);
+              // for (let id in getAllTheStuff.value){
+              //   getAllTheStuff.get(id);
+              //   console.log("This is... ", id);
+              // }
+              //
+              // getAllTheStuff.forEach(item => {
+              //   console.log("I'm here!");
+              //   store.put(item);
+              //   console.log("This is... ", review);
+              //   fillReviewsHTML(review, id); // adds reviews to the page
+              //   store.delete(id);
+              //   console.log("deleted ")
+              // })
+            // });
 
 
             // /* Getting the offline queue reviews - option 1: forEach loop. But what is "item"?*/
@@ -315,7 +332,7 @@ static checkForOnline(){
               //   console.log('Done cursoring');
               // });
 
-            /* This may be necessary */  
+            /* This may be necessary */
             // return tx.complete;
             // console.log('close db');
 
@@ -328,7 +345,7 @@ static checkForOnline(){
 
       } else {
         console.log("OFFLINE");
-        DBHelper.checkForOnline();
+        DBHelper.checkForOnline(review, id);
       }
       // var status = document.getElementById("status");
       // if(!navigator.onLine){
