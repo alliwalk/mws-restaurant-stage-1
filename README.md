@@ -45,3 +45,11 @@ The core functionality of the application will not change for this stage. Only t
 2. **Use IndexedDB to cache JSON responses.** In order to maintain offline use with the development server you will need to update the service worker to store the JSON received by your requests using the IndexedDB API. As with Stage One, any page that has been visited by the user should be available offline, with data pulled from the shell database.
 
 3. **Meet the minimum performance requirements.** Once you have your app working with the server and working in offline mode, you’ll need to measure your site performance using Lighthouse.
+
+## Project Overview: Stage 3
+
+In **Stage Three**, 
+
+Users are able to mark a restaurant as a favorite, this toggle is visible in the application. A form is added to allow users to add their own reviews for a restaurant. Form submission works properly and adds a new review to the database. 
+
+The client application works offline. JSON responses are cached using the IndexedDB API. Any data previously accessed while connected is reachable while offline. User is able to add a review to a restaurant while offline and the review is sent to the server when connectivity is re-established.
