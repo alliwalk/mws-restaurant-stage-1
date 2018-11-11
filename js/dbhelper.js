@@ -188,7 +188,6 @@
         let tx = db.transaction('offline', 'readwrite');
         let store = tx.objectStore('offline');
         store.put(review);
-        return;
         fillReviewsHTML(review, id); // adds reviews to the page
       }).then(response =>{
           console.log("response: ", response);
@@ -202,6 +201,8 @@
       // This is if you're online when first clicking Submit.
       console.log('The site is ONline');
       //create this fetch methods object
+      // DBHelper.postReviews(review, id);
+
       let fetchMethods = {
         method: 'POST',
         credentials: 'include',
@@ -227,8 +228,7 @@
               store.put(rev);
               console.log("This is ", rev);
               fillReviewsHTML(review, id); // adds reviews to the page
-              // store.delete(id);
-              // console.log("deleted ")
+
             })
             return tx.complete;
             console.log('end rev');
@@ -283,29 +283,63 @@ static checkForOnline(review, id){
               .objectStore('offline')
               .getAll();
 
-            }).then(anon => {
-              console.log("The review: ", review, id);
-
-              fillReviewsHTML(review, id); // adds reviews to the page
-              // store.delete(id);
-              // console.log("deleted ")
+            }).then(reviews => {
+              reviews.forEach(function(review) {
+                console.log("The review: ", review, review.id);
+                // fillReviewsHTML(review, review.id); // adds reviews from offline db to the page
+                DBHelper.postToServer(review, id);
+              })
             });
-
-          // dbPromise.then(db => {
-          //   console.log("open db again");
-          //   let tx= db.transaction('offline', 'readwrite')
-          //   let store = tx.objectStore('offline')
-          //   console.log("To delete: ", review, id);
-          //   store.delete(review, id);
-          // }).then(anon => {
-          //   console.log("deleted");
-          // });
         return;
 
       } else {
         console.log("OFFLINE");
         DBHelper.checkForOnline(review, id);
       }
+  }
+
+  static postToServer(review, id){
+    let fetchMethods = {
+      method: 'POST',
+      credentials: 'include',
+      body: JSON.stringify(review),
+      headers:{'Content-Type': 'application/json'}
+    };
+
+    fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`, fetchMethods).then(response => {
+      console.log('Fetch from network because now ONLINE', JSON.stringify(review));
+
+      if(!response.ok){
+        throw new Error('ERROR: response not ok.')
+      }
+
+      return response.json().then(data => {
+        // console.log('FETCH Result', JSON.stringify(data));
+
+        dbPromise.then(db => {
+          return db.transaction('reviews')
+            .objectStore('reviews')
+            data.forEach(rev => {
+              store.put(rev);
+            })
+            console.log('all put to reviews');
+          return tx.complete;
+        }).then(db => {
+           db.transaction('offline')
+            .objectStore('offline')
+              data.forEach(rev => {
+              store.delete(rev);
+              console.log("deleting the reviews");
+            })
+            return tx.complete;
+            console.log('deleted');
+        }).then(response =>{
+            console.log("response: ", response);
+        }).catch(error => {
+          console.log('FETCH Parsing Error', error);
+        });
+      });
+    }); //end fetch
   }
 
   /** Restaurant page URL.  */
