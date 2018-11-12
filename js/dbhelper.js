@@ -286,7 +286,6 @@ static checkForOnline(review, id){
             }).then(reviews => {
               reviews.forEach(function(review) {
                 console.log("The review: ", review, review.id);
-                // fillReviewsHTML(review, review.id); // adds reviews from offline db to the page
                 DBHelper.postToServer(review, id);
               })
             });
@@ -317,22 +316,21 @@ static checkForOnline(review, id){
         // console.log('FETCH Result', JSON.stringify(data));
 
         dbPromise.then(db => {
-          return db.transaction('reviews')
-            .objectStore('reviews')
-            data.forEach(rev => {
-              store.put(rev);
-            })
-            console.log('all put to reviews');
-          return tx.complete;
-        }).then(db => {
-           db.transaction('offline')
-            .objectStore('offline')
-              data.forEach(rev => {
-              store.delete(rev);
-              console.log("deleting the reviews");
-            })
-            return tx.complete;
-            console.log('deleted');
+          let tx = db.transaction('reviews', 'readwrite');
+          let store = tx.objectStore('reviews');
+          data.forEach(rev => {
+            store.put(rev);
+          })
+          console.log('all put to reviews');
+          tx.complete;
+
+          let tx2 = db.transaction('offline','readwrite');
+          let store2 = tx2.objectStore('offline');
+            data.forEach(del => {
+            store2.clear(del.id);
+          })
+          tx2.complete;
+          console.log('cleared');
         }).then(response =>{
             console.log("response: ", response);
         }).catch(error => {
