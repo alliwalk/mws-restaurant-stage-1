@@ -130,49 +130,31 @@ function addReview() {
     let restaurant_id = id;
     let name = document.getElementById('reviewer_name').value;
     let rating = document.getElementById('rating').value;
+    // const createdAt = getParameterByName('createdAt');
+    // let date = createdAt;
+    // let createdAt = date;
     let comments = document.getElementById('comment_text').value;
     const review = [{
         restaurant_id: id,
         name: name,
         rating: rating,
+        // date: createdAt,
         comments: comments
       }];
-      // debugger;
-      // idb_request.addEventListener("upgradeneeded", function(e){
-      //   var saveReview = this.result.createObjectStore("reviewTemp", { autoIncrement: true });
-      // })
-    //console log the values
     console.log(review, id);
 
     // debugger;
     DBHelper.putReview(review, id);
+    setFormToNothing();
 }
 
- /*
 
- this comes after the form is submitted
+function setFormToNothing(review){
+  document.getElementById('reviewer_name').value = "";
+  document.getElementById('rating').value = "" ;
+  document.getElementById('comment_text').value = "";
 
- // create variables for each review element
- function addReviewToPage() {
-   let restaurant_id =
-   reviewer-name
-   let rating
-   comment_text
-
- }
- */
-//   //After the form is submitted, get the values from the form
-  // let restaurantId = getParameterByName('id');
-  // let name = document.getElementById('reviewer-name').value;
-  // let rating = document.getElementById('rating').value;
-  // let comments = document.getElementById('comment_text').value;
-
-//   //take the value from the submitted form and put it back onto the page
-//   //take the value from the submitted form and put it into idb
-// }
-
-
-
+}
 
 
 /**
@@ -180,10 +162,6 @@ function addReview() {
  */
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   const container = document.getElementById('reviews-container');
-  // const title = document.createElement('h2');
-  // title.innerHTML = 'Reviews';
-  // container.appendChild(title);
-  //
 
   if (!reviews) {
     const noReviews = document.createElement('p');
@@ -211,8 +189,17 @@ createReviewHTML = (review) => {
 
   const date = document.createElement('p');
   var ts = new Date();
-  date.innerHTML = new Date(review.createdAt).toLocaleDateString();
-  // from https://alexandroperez.github.io/mws-walkthrough
+  // let date = ts.getTime();
+  // console.log(review.createdAt)
+  date.innerHTML = new Date(review.createdAt).toLocaleString(undefined, {
+  	day: 'numeric',
+  	month: 'numeric',
+  	year: 'numeric',
+  	hour: '2-digit',
+  	minute: '2-digit',
+});
+  // from https://alexandroperez.github.io/mws-walkthrough;
+  // https://www.toptal.com/software/definitive-guide-to-datetime-manipulation
   li.appendChild(date);
 
   const rating = document.createElement('p');
@@ -222,11 +209,6 @@ createReviewHTML = (review) => {
   const comments = document.createElement('p');
   comments.innerHTML = review.comments;
   li.appendChild(comments);
-
-  // const remove = document.createElement('a');
-  // // const remove = document.createElement('p');
-  // remove.innerHTML = 'Remove comment';
-  // li.appendChild(remove);
 
   return li;
 }
