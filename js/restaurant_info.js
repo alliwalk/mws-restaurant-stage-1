@@ -130,9 +130,6 @@ function addReview() {
     let restaurant_id = id;
     let name = document.getElementById('reviewer_name').value;
     let rating = document.getElementById('rating').value;
-    // const createdAt = getParameterByName('createdAt');
-    // let date = date;
-    // let createdAt = date;
     let comments = document.getElementById('comment_text').value;
     const review = [{
         restaurant_id: id,
@@ -193,6 +190,7 @@ createReviewHTML = (review) => {
 
   if(review.createdAt){
     date.innerHTML = ts.toLocaleString(undefined, {
+    // https://www.toptal.com/software/definitive-guide-to-datetime-manipulation
   	day: 'numeric',
   	month: 'numeric',
   	year: 'numeric',
@@ -202,15 +200,7 @@ createReviewHTML = (review) => {
   } else{
     date.innerHTML = new Date(ps);
   }
-  // var ts = Date.now();
-  // var time = new Date().getTime();
-  // var date = new Date(time);
-  // let date = ts.getTime();
-  // console.log(review.createdAt)
-  // date.innerHTML = ts.toLocaleString();
-  // date.innerHTML = ts;
-  // from https://alexandroperez.github.io/mws-walkthrough;
-  // https://www.toptal.com/software/definitive-guide-to-datetime-manipulation
+
   li.appendChild(date);
 
   const rating = document.createElement('p');
