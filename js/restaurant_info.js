@@ -135,7 +135,6 @@ function addReview() {
         restaurant_id: id,
         name: name,
         rating: rating,
-        // date: Date.now(),
         comments: comments
       }];
     console.log(review, id);
@@ -150,7 +149,7 @@ function setFormToNothing(review){
   document.getElementById('reviewer_name').value = "";
   document.getElementById('rating').value = "" ;
   document.getElementById('comment_text').value = "";
-
+  // see also - https://alexandroperez.github.io/mws-walkthrough/ 10/27/2018
 }
 
 
