@@ -131,14 +131,14 @@ function addReview() {
     let name = document.getElementById('reviewer_name').value;
     let rating = document.getElementById('rating').value;
     // const createdAt = getParameterByName('createdAt');
-    // let date = createdAt;
+    // let date = date;
     // let createdAt = date;
     let comments = document.getElementById('comment_text').value;
     const review = [{
         restaurant_id: id,
         name: name,
         rating: rating,
-        // date: createdAt,
+        // date: Date.now(),
         comments: comments
       }];
     console.log(review, id);
@@ -188,16 +188,27 @@ createReviewHTML = (review) => {
   li.appendChild(name);
 
   const date = document.createElement('p');
-  var ts = new Date();
-  // let date = ts.getTime();
-  // console.log(review.createdAt)
-  date.innerHTML = new Date(review.createdAt).toLocaleString(undefined, {
+  var ts = new Date(review.createdAt);
+  var ps = Date.now();
+
+  if(review.createdAt){
+    date.innerHTML = ts.toLocaleString(undefined, {
   	day: 'numeric',
   	month: 'numeric',
   	year: 'numeric',
   	hour: '2-digit',
   	minute: '2-digit',
-});
+    });
+  } else{
+    date.innerHTML = new Date(ps);
+  }
+  // var ts = Date.now();
+  // var time = new Date().getTime();
+  // var date = new Date(time);
+  // let date = ts.getTime();
+  // console.log(review.createdAt)
+  // date.innerHTML = ts.toLocaleString();
+  // date.innerHTML = ts;
   // from https://alexandroperez.github.io/mws-walkthrough;
   // https://www.toptal.com/software/definitive-guide-to-datetime-manipulation
   li.appendChild(date);
