@@ -324,6 +324,7 @@ static checkForOnline(review, id){
           console.log('all put to reviews');
           tx.complete;
 
+          //Discussed during 1:1
           let tx2 = db.transaction('offline','readwrite');
           let store2 = tx2.objectStore('offline');
             data.forEach(del => {
