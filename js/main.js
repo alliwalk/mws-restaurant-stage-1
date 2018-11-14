@@ -167,7 +167,7 @@ createRestaurantHTML = (restaurant) => {
   name.innerHTML = restaurant.name;
   li.append(name);
 
-  // Found via: https://www.youtube.com/watch?v=XbCwxeCqxw4
+  // Found via: https://www.youtube.com/watch?v=XbCwxeCqxw4 -- between 10/23 - 11/13 2018
   const favorite = document.createElement('button');
   favorite.innerHTML = '❤';
   favorite.classList.add('fav_yes');
@@ -198,7 +198,7 @@ createRestaurantHTML = (restaurant) => {
   return li;
 }
 
-// Based on...https://www.youtube.com/watch?v=XbCwxeCqxw4
+// Based on...https://www.youtube.com/watch?v=XbCwxeCqxw4 - between 10/23 - 11/13 2018
 changeFavit = (btn, fav) => {
   if(!fav){
     console.log("Not a favit! Look now it's grey.");
