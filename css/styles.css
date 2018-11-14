@@ -237,17 +237,22 @@ nav h1 a {
   border-bottom: 3px solid #eee;
 }
 
-/* https://codepen.io/waqasy/pen/ojaRzx */
 #restaurants-list button {
 	font-size: 18px;
 	color: grey;
 }
 #restaurants-list .fav_yes {
-	color: red;
+	color: #F26547;
 }
 #restaurants-list .fav_no {
 	color: grey;
 }
+
+#restaurants-list .fav_yes:hover,
+#restaurants-list .fav_no:hover {
+	cursor: pointer;
+}
+
 
 /* ====================== Restaurant Details ====================== */
 .inside{
