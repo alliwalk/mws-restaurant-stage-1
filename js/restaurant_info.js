@@ -185,12 +185,13 @@ createReviewHTML = (review) => {
   li.appendChild(name);
 
   const date = document.createElement('p');
+  // see also - https://alexandroperez.github.io/mws-walkthrough/ 10/27/2018
   var ts = new Date(review.createdAt);
   var ps = Date.now();
 
   if(review.createdAt){
     date.innerHTML = ts.toLocaleString(undefined, {
-    // https://www.toptal.com/software/definitive-guide-to-datetime-manipulation
+    // https://www.toptal.com/software/definitive-guide-to-datetime-manipulation 11/12/2018
   	day: 'numeric',
   	month: 'numeric',
   	year: 'numeric',
