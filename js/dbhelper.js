@@ -379,7 +379,7 @@ static checkForOnline(review, id){
             let tx = db.transaction('restaurants', 'readwrite');
             let store = tx.objectStore('restaurants');
             store.get(restaurantId).then(restaurant => {
-              restaurant.is_favorite = isFavorite; /* SEE - https://www.youtube.com/watch?v=XbCwxeCqxw4*/
+              restaurant.is_favorite = isFavorite; /* SEE - https://www.youtube.com/watch?v=XbCwxeCqxw4 - between 10/23 - 11/13 2018*/
               store.put(restaurant);
             });
         })
