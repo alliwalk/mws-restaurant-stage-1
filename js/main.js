@@ -213,7 +213,24 @@ changeFavit = (btn, fav) => {
   }
 }
 
+//check for online status
+DBHelper.isOnline();
 
+  //
+  // window.addEventListener('load', function() {
+  // var status = document.getElementById("status");
+  //
+  // function updateOnlineStatus(event) {
+  //   let condition = navigator.onLine ? "online" : "offline";
+  //   status.className = condition;
+  //   status.innerHTML = condition.toUpperCase();
+  //
+  //   // log.insertAdjacentHTML("beforeend", " Event: " + event.type + "; Status: " + condition);
+  // }
+  //
+  // window.addEventListener('online',  updateOnlineStatus);
+  // window.addEventListener('offline', updateOnlineStatus);
+  // });
 
 /**
  * Add markers for current restaurants to the map.
