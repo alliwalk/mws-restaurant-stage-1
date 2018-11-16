@@ -20,7 +20,7 @@
     const port = 1337; //Change this to your server port
     return `http://localhost:${port}/`;
    }
-   
+
    /* Fetch all restaurants. */
    static fetchRestaurants(callback) {
      fetch(`${DBHelper.DATABASE_URL}restaurants`).then(response => {
@@ -191,7 +191,6 @@
         store.put(review);
         fillReviewsHTML(review, id); // adds reviews to the page
       }).then(response =>{
-          console.log("response: ", response);
           console.log("Just put review in OFFLINE db.");
       }).catch(error => {
         console.log('FETCH Parsing Error', error);
@@ -203,7 +202,7 @@
       // This is if you're online when first clicking Submit.
       console.log('The site is ONline');
       //create this fetch methods object
-      // DBHelper.postReviews(review, id);
+      // DBHelper.postToServer(review, id);
 
       let fetchMethods = {
         method: 'POST',
@@ -245,33 +244,53 @@
     } //end else
   }
 
-static checkForOnline(review, id){
+
+
+// static checkForOnline(result){
   // if (!navigator.onLine){
-    alert("[checkForOnline] The site is not online.");
+    // alert("[checkForOnline] The site is not online.");
 
     // https://stackoverflow.com/questions/17883692/how-to-set-time-delay-in-javascript
-    var delayInMilliseconds = 6500; //5 second
+    // var delayInMilliseconds = 6500; //5 second
 
-    setTimeout(function() {
-      if (!navigator.onLine){
-      //your code to be executed after 1 second
-        DBHelper.addReviewWhenOnline()
-        return;
-        } else {
-          alert("[checkForOnline] The site is online. ");
-        DBHelper.addReviewWhenOnline(review, id);
-        return;
+    // setTimeout(function() {
+  //     if (!navigator.onLine){
+  //     //your code to be executed after 1 second
+  //       DBHelper.addReviewWhenOnline()
+  //       return;
+  //       } else {
+  //         // alert("[checkForOnline] The site is online. ");
+  //       DBHelper.addReviewWhenOnline(review, id);
+  //       return;
+  //       }
+  // }
+
+static isOnline() {
+   function handleConnectionChange(event){
+      let result = event.type;
+
+        if(event.type == "offline"){
+            console.log("You lost connection.");
         }
-      }, delayInMilliseconds);
-  }
+        if(event.type == "online"){
+            console.log("You are now back online.");
+            DBHelper.addReviewWhenOnline();
+        }
+    }
+    window.addEventListener('online', handleConnectionChange);
+    window.addEventListener('offline', handleConnectionChange);
+}
 
  /* ...if offline...*/
   static addReviewWhenOnline(review, id){
      console.log("[addReviewWhenOnline] Add this review when online: ", review, id);
     // console.log(navigator.onLine);
+    DBHelper.isOnline();
+
     var result = navigator.onLine;
       /* ...check if now online...*/
       if (result){ //is true
+
         console.log("BACK ONLINE");
 
         /* This IF is if you're back online after being offline first.
@@ -284,7 +303,6 @@ static checkForOnline(review, id){
             return db.transaction('offline')
               .objectStore('offline')
               .getAll();
-
             }).then(reviews => {
               reviews.forEach(function(review) {
                 console.log("The review: ", review, review.id);
@@ -292,10 +310,6 @@ static checkForOnline(review, id){
               })
             });
         return;
-
-      } else {
-        console.log("OFFLINE");
-        DBHelper.checkForOnline(review, id);
       }
   }
 
@@ -308,7 +322,7 @@ static checkForOnline(review, id){
     };
 
     fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`, fetchMethods).then(response => {
-      console.log('Fetch from network because now ONLINE', JSON.stringify(review));
+      console.log('Fetch from network because now ONLINE AGAIN', JSON.stringify(review));
 
       if(!response.ok){
         throw new Error('ERROR: response not ok.')
