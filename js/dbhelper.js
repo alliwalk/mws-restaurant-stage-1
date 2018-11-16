@@ -197,7 +197,7 @@
         console.log('FETCH Parsing Error', error);
       });
       DBHelper.addReviewWhenOnline(review, id);
-      return;
+      // return;
 
     } else {
       // This is if you're online when first clicking Submit.
