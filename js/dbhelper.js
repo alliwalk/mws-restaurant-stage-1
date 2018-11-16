@@ -192,6 +192,7 @@
         fillReviewsHTML(review, id); // adds reviews to the page
       }).then(response =>{
           console.log("response: ", response);
+          console.log("Just put review in OFFLINE db.");
       }).catch(error => {
         console.log('FETCH Parsing Error', error);
       });
