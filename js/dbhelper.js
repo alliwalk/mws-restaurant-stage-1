@@ -406,62 +406,6 @@ static isOnline() {
     });
   }
 
-  // static deleteReview(review, id){
-  //   let fetchMethods = {
-  //     method: 'POST',
-  //     credentials: 'include',
-  //     body: JSON.stringify(review),
-  //     headers:{'Content-Type': 'application/json'}
-  //   };
-  //
-  //   fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`, fetchMethods).then(response => {
-  //     console.log('Fetch from network because now ONLINE AGAIN...', JSON.stringify(review));
-  //
-  //     if(!response.ok){
-  //       throw new Error('ERROR: response not ok.')
-  //     }
-  //
-  //     return response.json().then(data => {
-  //       // console.log('FETCH Result', JSON.stringify(data));
-  //
-  //       dbPromise.then(db => {
-  //         console.log("Open OFFLINE db...");
-  //         return db.transaction('offline')
-  //           .objectStore('offline')
-  //           .getAll();
-  //         }).then(reviews => {
-  //           reviews.forEach(function(review) {
-  //             console.log("The review: ", review, review.id);
-  //             DBHelper.postToServer(review, id);
-  //           })
-  //         });
-  //
-  //       dbPromise.then(db => {
-  //         let tx = db.transaction('reviews', 'readwrite');
-  //         let store = tx.objectStore('reviews');
-  //         data.forEach(rev => {
-  //           store.put(rev);
-  //         })
-  //         console.log('Move from offline db to reviews db.');
-  //         tx.complete;
-  //
-  //         //Discussed during 1:1 11.12.2018
-  //         let tx2 = db.transaction('offline','readwrite');
-  //         let store2 = tx2.objectStore('offline');
-  //           data.forEach(del => {
-  //           store2.clear(del.id);
-  //         })
-  //         tx2.complete;
-  //         console.log('Offline DB is cleared.');
-  //       }).then(response =>{
-  //           console.log("response: ", response);
-  //       }).catch(error => {
-  //         console.log('FETCH Parsing Error', error);
-  //       });
-  //     });
-  //   }); //end fetch
-  // }
-
 
 /** end of Class DBHelper **/
 }
