@@ -237,19 +237,34 @@ nav h1 a {
   border-bottom: 3px solid #eee;
 }
 
-#restaurants-list button {
-	font-size: 18px;
-	color: grey;
+#restaurants-list .fav_btn{
+	font-size: 32px;
+	width: 55px;
+	height: 55px;
+	border-radius: 50%;
+	margin-bottom: 12px;
+	margin-top: -10px;
+	/* border: 1px solid whitesmoke; */
+	/* background-color: whitesmoke; */
 }
 #restaurants-list .fav_yes {
-	color: #F26547;
+	color: #FCE3DD;
+	background-color:#F26547;
+	border: 1px solid #F26547;
+}
+#restaurants-list .fav_yes:hover {
+	background-color:#F37357;
 }
 #restaurants-list .fav_no {
-	color: grey;
+	color: #ADA9A6;
+	border: 1px solid #EAE9E8;
+	background-color: #EAE9E8;
+}
+#restaurants-list .fav_no:hover {
+	background-color: #ECECEB;
 }
 
-#restaurants-list .fav_yes:hover,
-#restaurants-list .fav_no:hover {
+#restaurants-list button:hover{
 	cursor: pointer;
 }
 
