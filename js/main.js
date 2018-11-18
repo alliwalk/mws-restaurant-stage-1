@@ -237,21 +237,3 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     }
   });
 }
-
-// changeFavStatus = (restaurant = self.restaurants) => {
-//   restaurants.forEach(restaurant => {
-//     document.getElementById('``');
-//
-//     if(restaurant.is_favorite == "false"){
-//       favorite.classList.add('fav_no');
-//     } else {
-//       favorite.classList.add('fav_yes');
-//     }
-//   }
-//   const ul = document.getElementById('reviews-list');
-//
-//   reviews.forEach(review => {
-//     ul.appendChild(createReviewHTML(review));
-//   });
-//   container.appendChild(ul);
-//   }
