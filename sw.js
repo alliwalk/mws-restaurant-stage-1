@@ -72,7 +72,7 @@ self.addEventListener('activate', function(event) {
 // https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerGlobalScope
 // June 20, 2018
 self.addEventListener('fetch', function(event) {
-  console.log('Handling fetch event for', event.request.url);
+  console.log('SW fetch OK');
 
   event.respondWith(
     caches.match(event.request).then(function(cacheResponse) {
