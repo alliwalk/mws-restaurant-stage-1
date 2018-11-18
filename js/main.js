@@ -162,7 +162,7 @@ createRestaurantHTML = (restaurant) => {
 
   favorite.onclick = function(){
     /* Evaluate favorite. If true or "true", set to false; Else, it must be false so set to true
-    if/else updates :https://github.com/fgiorgio/mws-restaurant-stage-1/blob/master/js/main.js 11/18/2018*/
+    if/else updates : https://github.com/fgiorgio/mws-restaurant-stage-1/blob/master/js/main.js 11/18/2018*/
     if (restaurant.is_favorite == true){
       restaurant.is_favorite = false;
     } else if (restaurant.is_favorite == "true"){
@@ -205,6 +205,7 @@ createRestaurantHTML = (restaurant) => {
 
 // This is only a toggle
 // Based on...https://www.youtube.com/watch?v=XbCwxeCqxw4 - between 10/23 - 11/13 2018
+// add remove examples: https://github.com/fgiorgio/mws-restaurant-stage-1/blob/master/js/main.js 11/18/2018
 changeFavit = (btn, fav) => {
   if(!fav){
     console.log("Not a favit! Look now it's grey.");
