@@ -380,23 +380,23 @@ static isOnline() {
   }
 
 
-
   /* Use Fetch to update restaurant favorite. */
-  static updateFavoriteStatus(restaurantId, isFavorite) {
+  static updateFavoriteStatus(restaurantId, newFavStatus) {
 
-    fetch(`http://localhost:1337/restaurants/${restaurantId}/?is_favorite=${isFavorite}`, {method: 'PUT'}).then(function(response) {
+    fetch(`${DBHelper.DATABASE_URL}restaurants/${restaurantId}/?is_favorite=${newFavStatus}`, {method: 'PUT'}).then(function(response) {
       console.log('Status: ', response.status );
         if(!response.ok){
           throw new Error('ERROR: response not ok.')
         }
         response.json().then(function(getFavData){
-          console.log('FETCH Result', getFavData);
+          console.log('[dbhelper.js] FETCH Result:', getFavData.is_favorite);
           dbPromise.then(function(db) {
             let tx = db.transaction('restaurants', 'readwrite');
             let store = tx.objectStore('restaurants');
             store.get(restaurantId).then(restaurant => {
-              restaurant.is_favorite = isFavorite; /* SEE - https://www.youtube.com/watch?v=XbCwxeCqxw4 - between 10/23 - 11/13 2018*/
+              restaurant.is_favorite = newFavStatus; /* SEE - https://www.youtube.com/watch?v=XbCwxeCqxw4 - between 10/23 - 11/13 2018*/
               store.put(restaurant);
+              console.log("[dbhelper.js] Updating Fav status to:", restaurant.is_favorite);
             });
         })
         .catch(function(error){
