@@ -167,18 +167,36 @@ createRestaurantHTML = (restaurant) => {
   name.innerHTML = restaurant.name;
   li.append(name);
 
-  // Found via: https://www.youtube.com/watch?v=XbCwxeCqxw4 -- between 10/23 - 11/13 2018
+  // Originally found via: https://www.youtube.com/watch?v=XbCwxeCqxw4 -- between 10/23 - 11/13 2018
   const favorite = document.createElement('button');
   favorite.innerHTML = '❤';
-  favorite.classList.add('fav_yes');
-  favorite.onclick = function(){
-    const isFav = !restaurant.is_favorite; //false
-    DBHelper.updateFavoriteStatus(restaurant.id, isFav);
-    restaurant.is_favorite = !restaurant.is_favorite
-    changeFavit(favorite, restaurant.is_favorite)
-  };
-  li.append(favorite);
+  favorite.className = 'fav_btn';
 
+  favorite.onclick = function(){
+    /* Evaluate favorite. If true or "true", set to false; Else, it must be false so set to true
+    if/else updates :https://github.com/fgiorgio/mws-restaurant-stage-1/blob/master/js/main.js 11/18/2018*/
+    if (restaurant.is_favorite == true){
+      restaurant.is_favorite = false;
+    } else if (restaurant.is_favorite == "true"){
+      restaurant.is_favorite = false;
+    } else {
+      restaurant.is_favorite = true;
+    }
+    /* take restaurant id and send value */
+    DBHelper.updateFavoriteStatus(restaurant.id, restaurant.is_favorite);
+    changeFavit(favorite, restaurant.is_favorite);
+  };
+
+  /* Evaluate favorite. If true or "true", it is true; Else, it must be false it is false */
+  if(restaurant.is_favorite == true){
+    restaurant.is_favorite = true;
+  } else if(restaurant.is_favorite == "true"){
+    restaurant.is_favorite = true;
+  } else {
+    restaurant.is_favorite = false;
+  }
+  changeFavit(favorite, restaurant.is_favorite);
+  li.append(favorite);
 
   const neighborhood = document.createElement('p');
   neighborhood.innerHTML = restaurant.neighborhood;
@@ -188,49 +206,35 @@ createRestaurantHTML = (restaurant) => {
   address.innerHTML = restaurant.address;
   li.append(address);
 
-
   const more = document.createElement('a');
   more.className = 'button'
   more.innerHTML = 'View Details';
   more.href = DBHelper.urlForRestaurant(restaurant);
   li.append(more)
-
   return li;
+
 }
 
+// This is only a toggle
 // Based on...https://www.youtube.com/watch?v=XbCwxeCqxw4 - between 10/23 - 11/13 2018
 changeFavit = (btn, fav) => {
   if(!fav){
     console.log("Not a favit! Look now it's grey.");
-    btn.classList.toggle('fav_yes');
-    btn.setAttribute('aria-label', 'Toggle as favorite');
-      console.log("------ Not a favorite");
+    btn.classList.remove('fav_yes');
+    btn.classList.add('fav_no');
+    btn.setAttribute('aria-label', 'Click to toggle as favorite');
+    console.log("------ Not a favorite");
   } else {
     console.log("Found a Favit! Look now it's red.");
-    btn.classList.toggle('fav_yes');
-    btn.setAttribute('aria-label', 'Remove favorite');
+    btn.classList.add('fav_yes');
+    btn.classList.remove('fav_no');
+    btn.setAttribute('aria-label', 'Click to remove favorite');
     console.log("****** Toggled as favorite");
   }
 }
-
 //check for online status
 DBHelper.isOnline();
 
-  //
-  // window.addEventListener('load', function() {
-  // var status = document.getElementById("status");
-  //
-  // function updateOnlineStatus(event) {
-  //   let condition = navigator.onLine ? "online" : "offline";
-  //   status.className = condition;
-  //   status.innerHTML = condition.toUpperCase();
-  //
-  //   // log.insertAdjacentHTML("beforeend", " Event: " + event.type + "; Status: " + condition);
-  // }
-  //
-  // window.addEventListener('online',  updateOnlineStatus);
-  // window.addEventListener('offline', updateOnlineStatus);
-  // });
 
 /**
  * Add markers for current restaurants to the map.
@@ -245,3 +249,21 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     }
   });
 }
+
+// changeFavStatus = (restaurant = self.restaurants) => {
+//   restaurants.forEach(restaurant => {
+//     document.getElementById('``');
+//
+//     if(restaurant.is_favorite == "false"){
+//       favorite.classList.add('fav_no');
+//     } else {
+//       favorite.classList.add('fav_yes');
+//     }
+//   }
+//   const ul = document.getElementById('reviews-list');
+//
+//   reviews.forEach(review => {
+//     ul.appendChild(createReviewHTML(review));
+//   });
+//   container.appendChild(ul);
+//   }
