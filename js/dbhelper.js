@@ -23,6 +23,8 @@
 
    /* Fetch all restaurants. */
    static fetchRestaurants(callback) {
+     // debugger;
+
      fetch(`${DBHelper.DATABASE_URL}restaurants`).then(response => {
        if(!response.ok){
          throw new Error('ERROR: response not ok.')
@@ -244,26 +246,6 @@
     } //end else
   }
 
-
-
-// static checkForOnline(result){
-  // if (!navigator.onLine){
-    // alert("[checkForOnline] The site is not online.");
-
-    // https://stackoverflow.com/questions/17883692/how-to-set-time-delay-in-javascript
-    // var delayInMilliseconds = 6500; //5 second
-
-    // setTimeout(function() {
-  //     if (!navigator.onLine){
-  //     //your code to be executed after 1 second
-  //       DBHelper.addReviewWhenOnline()
-  //       return;
-  //       } else {
-  //         // alert("[checkForOnline] The site is online. ");
-  //       DBHelper.addReviewWhenOnline(review, id);
-  //       return;
-  //       }
-  // }
 
 static isOnline() {
    function handleConnectionChange(event){
