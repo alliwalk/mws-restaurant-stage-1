@@ -87,12 +87,16 @@ nav h1 {
 	padding: 10px;
 }
 nav h1 a {
-  color: #fff;
+  color: #EFECEA;
   font-size: 1.250em;
   font-weight: 200;
   letter-spacing: 10px;
   text-transform: uppercase;
 }
+nav h1 a:hover {
+  color: #E0C5A2;
+}
+
 #breadcrumb {
     padding: 10px 20px 16px;
     list-style: none;
