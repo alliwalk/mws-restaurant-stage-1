@@ -71,10 +71,20 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
 
+  /* Image optimization snippets taken from: https://github.com/redragonx/mws-restaurant-stage-1/blob/master/app/js/main.js
+  and
+  https://github.com/fgiorgio/mws-restaurant-stage-1/blob/master/js/main.js
+  Nov 21, 2018
+  */
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  image.title = restaurant.name;
+  const imgUrl = DBHelper.imageUrlForRestaurant(restaurant);
   image.alt = "Image for " + restaurant.name;
+  const img1x = imgUrl+".jpg";
+  image.src = img1x;
+  image.srcset = (imgUrl + "_400"+".webp" + " 400w", imgUrl + "_400"+".jpg"+ " 400w", imgUrl+".webp");
+
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
