@@ -144,12 +144,92 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
  */
 createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
-
+  /* Image optimization snippets taken from: https://github.com/redragonx/mws-restaurant-stage-1/blob/master/app/js/main.js
+  and
+  https://github.com/fgiorgio/mws-restaurant-stage-1/blob/master/js/main.js
+  Nov 21, 2018
+  */
+  const imgUrl = DBHelper.imageUrlForRestaurant(restaurant);
   const image = document.createElement('img');
-  image.className = 'restaurant-img';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  image.alt = "Interior photograph of " + restaurant.name ;
+  image.title = restaurant.name;
+  image.alt = "Interior photograph of " + restaurant.name;
+  image.className = 'restaurant-img lazy';
+
+  const img1x = imgUrl+".jpg";
+
+  image.src = img1x;
+  image.srcset = (imgUrl + "_400"+".webp" + " 400w", imgUrl + "_400"+".jpg"+ " 400w", imgUrl+".webp");
+  image.sizes = `(max-width: 768px) 400px, 900px`;
+
   li.append(image);
+
+  document.addEventListener("DOMContentLoaded", function() {
+    let lazyImages = [].slice.call(document.querySelectorAll("lazy"));
+    let active = false;
+
+    const lazyLoad = function() {
+      if (active === false) {
+        active = true;
+      console.log("test");
+        setTimeout(function() {
+          lazyImages.forEach(function(lazyImage) {
+            if ((lazyImage.getBoundingClientRect().top <= window.innerHeight && lazyImage.getBoundingClientRect().bottom >= 0) && getComputedStyle(lazyImage).display !== "none") {
+              lazyImage.src = image.src;
+              lazyImage.srcset = image.srcset;
+              lazyImage.classList.remove("lazy");
+
+              lazyImages = lazyImages.filter(function(image) {
+                return image !== lazyImage;
+              });
+
+              if (lazyImages.length === 0) {
+                document.removeEventListener("scroll", lazyLoad);
+                window.removeEventListener("resize", lazyLoad);
+                window.removeEventListener("orientationchange", lazyLoad);
+              }
+            }
+          });
+
+          active = false;
+        }, 200);
+      }
+    };
+
+    document.addEventListener("scroll", lazyLoad);
+    window.addEventListener("resize", lazyLoad);
+    window.addEventListener("orientationchange", lazyLoad);
+  });
+
+
+
+//   // image.datasrc = 'restaurant-img lazy';
+  // const picture = document.createElement('picture');
+  // li.append(picture);
+
+  // const imgSource = document.createElement('source');
+  // imgSource.type = 'img/webp';
+  // imgSource.srcset = imgUrl+'.webp';
+  // picture.append(imgSource);
+
+  // const image = document.createElement('img');
+  // image.className = 'restaurant-img';
+  // image.alt = 'Interior photograph of ' + restaurant.name;
+
+
+
+  // picture.append(image);
+
+    // // image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  // } else {
+  // const emptyImg = document.createElement('div');
+  // emptyImg.className = 'empty-img';
+  // li.append(emptyImg);
+
+
+// }
+
+
+
 
   const name = document.createElement('h3');
   name.innerHTML = restaurant.name;
