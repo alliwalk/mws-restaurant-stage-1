@@ -29,6 +29,7 @@
        if(!response.ok){
          throw new Error('ERROR: response not ok.')
         } return response.json().then(myJson => {
+
            console.log("Db created. Now put stuff in.");
            dbPromise.then(db => {
              let tx = db.transaction('restaurants', 'readwrite');
@@ -345,8 +346,15 @@ static isOnline() {
   }
 
   /**  * Restaurant image URL. */
+  /* If/else idea & .photograph, from https://github.com/fgiorgio/mws-restaurant-stage-1/blob/master/js/dbhelper.js
+  Nov 21, 2018
+  */
   static imageUrlForRestaurant(restaurant) {
-    return (`/img/${restaurant.id}.jpg`);
+    if(typeof restaurant.photograph !== 'undefined') {
+      return (`/img/${restaurant.photograph}`);
+    }else{
+      return (`/img/10`);
+    }
   }
 
   /** Map marker for a restaurant. */
