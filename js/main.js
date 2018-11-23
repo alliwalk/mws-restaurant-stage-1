@@ -163,6 +163,9 @@ createRestaurantHTML = (restaurant) => {
 
   li.append(image);
 
+  /*
+  Attempt at lazy load - https://github.com/aFarkas/lazysizes, Nov 21, 2018
+  */
   document.addEventListener("DOMContentLoaded", function() {
     let lazyImages = [].slice.call(document.querySelectorAll("lazy"));
     let active = false;
@@ -199,36 +202,6 @@ createRestaurantHTML = (restaurant) => {
     window.addEventListener("resize", lazyLoad);
     window.addEventListener("orientationchange", lazyLoad);
   });
-
-
-
-//   // image.datasrc = 'restaurant-img lazy';
-  // const picture = document.createElement('picture');
-  // li.append(picture);
-
-  // const imgSource = document.createElement('source');
-  // imgSource.type = 'img/webp';
-  // imgSource.srcset = imgUrl+'.webp';
-  // picture.append(imgSource);
-
-  // const image = document.createElement('img');
-  // image.className = 'restaurant-img';
-  // image.alt = 'Interior photograph of ' + restaurant.name;
-
-
-
-  // picture.append(image);
-
-    // // image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  // } else {
-  // const emptyImg = document.createElement('div');
-  // emptyImg.className = 'empty-img';
-  // li.append(emptyImg);
-
-
-// }
-
-
 
 
   const name = document.createElement('h3');
