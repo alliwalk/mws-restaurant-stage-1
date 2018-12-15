@@ -1,3 +1,9 @@
+Demo: https://udacity-mws-final.netlify.com/
+
+Udacity's Mobile Web Specialist course, projects 1-3. Below are overview and instructions, for each submission stage.
+
+---
+
 # Mobile Web Specialist Certification Course
 ---
 #### _Three Stage Course Material Project - Restaurant Reviews_
@@ -48,8 +54,6 @@ The core functionality of the application will not change for this stage. Only t
 
 ## Project Overview: Stage 3
 
-In **Stage Three**, 
-
-Users are able to mark a restaurant as a favorite, this toggle is visible in the application. A form is added to allow users to add their own reviews for a restaurant. Form submission works properly and adds a new review to the database. 
+In **Stage Three**, users are able to mark a restaurant as a favorite, this toggle is visible in the application. A form is added to allow users to add their own reviews for a restaurant. Form submission works properly and adds a new review to the database. 
 
 The client application works offline. JSON responses are cached using the IndexedDB API. Any data previously accessed while connected is reachable while offline. User is able to add a review to a restaurant while offline and the review is sent to the server when connectivity is re-established.
