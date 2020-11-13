@@ -17,9 +17,9 @@
  class DBHelper {
    /* Database URL. Change this to restaurants.json file location on your server. */
   static get DATABASE_URL() {
-    // const port = 1337; //Change this to your server port
-    // return `http://localhost:${port}/`;
-    return 'https://udacity-mws-final.netlify.app/';
+     const port = 1337; //Change this to your server port
+     return `http://localhost:${port}/`;
+    // return 'https://udacity-mws-final.netlify.app/';
    }
 
    /* Fetch all restaurants. */
